@@ -1,6 +1,6 @@
 package com.khipster.template.khipstertemplate.config.security
 
-import com.khipster.template.khipstertemplate.repository.UserRepository
+import com.khipster.template.khipstertemplate.repository.UserRepo
 import com.khipster.template.khipstertemplate.domain.User
 import org.hibernate.validator.internal.constraintvalidators.hv.EmailValidator
 import org.slf4j.LoggerFactory
@@ -16,7 +16,7 @@ import java.util.Locale
  * Authenticate a user from the database.
  */
 @Component("userDetailsService")
-class DomainUserDetailsService(private val userRepository: UserRepository) : UserDetailsService {
+class DomainUserDetailsService(private val userRepo: UserRepo) : UserDetailsService {
 
     private val log = LoggerFactory.getLogger(javaClass)
 
@@ -25,13 +25,13 @@ class DomainUserDetailsService(private val userRepository: UserRepository) : Use
         log.debug("Authenticating $login")
 
         if (EmailValidator().isValid(login, null)) {
-            return userRepository.findOneWithAuthoritiesByEmailIgnoreCase(login)
+            return userRepo.findOneWithAuthoritiesByEmailIgnoreCase(login)
                 .map { createSpringSecurityUser(login, it) }
                 .orElseThrow { UsernameNotFoundException("User with email $login was not found in the database") }
         }
 
         val lowercaseLogin = login.lowercase(Locale.ENGLISH)
-        return userRepository.findOneWithAuthoritiesByLogin(lowercaseLogin)
+        return userRepo.findOneWithAuthoritiesByLogin(lowercaseLogin)
             .map { createSpringSecurityUser(lowercaseLogin, it) }
             .orElseThrow { UsernameNotFoundException("User $lowercaseLogin was not found in the database") }
     }

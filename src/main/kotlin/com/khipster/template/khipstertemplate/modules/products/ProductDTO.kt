@@ -1,4 +1,4 @@
-package com.khipster.template.khipstertemplate.module.products
+package com.khipster.template.khipstertemplate.modules.products
 
 import jakarta.validation.constraints.NotNull
 import java.io.Serializable

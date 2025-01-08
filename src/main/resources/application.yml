@@ -1,0 +1,66 @@
+spring:
+  application:
+    name: KhipsterTemplate
+  datasource:
+    url: jdbc:mysql://localhost:3306/template?useUnicode=true&characterEncoding=utf8&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=UTC
+    username: root
+    password: Thanh25102
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+  docker:
+    compose:
+      enabled: false
+  messages:
+    basename: i18n/messages
+    encoding: UTF-8
+    
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui-custom.html
+    operationsSorter: method
+  show-actuator: true
+
+server:
+  servlet:
+    session:
+      cookie:
+        http-only: true
+
+jhipster:
+  cache:
+    ehcache:
+      time-to-live-seconds: 3600
+      max-entries: 100
+  registry:
+    password: admin
+  clientApp:
+    name: KhipsterTemplate
+  cors:
+    allowed-origins: >
+      http://localhost:8100,https://localhost:8100,
+      http://localhost:9000,https://localhost:9000,
+      http://localhost:9060,https://localhost:9060
+    allowed-methods: '*'
+    allowed-headers: '*'
+    exposed-headers: >
+      Authorization,Link,X-Total-Count,
+      X-${jhipster.clientApp.name}-alert,
+      X-${jhipster.clientApp.name}-error,
+      X-${jhipster.clientApp.name}-params
+    allow-credentials: true
+    max-age: 1800
+  security:
+    authentication:
+      jwt:
+        base64-secret: NmRlZDNlYWE5NzZmYzU4ZDk0NzY5N2I2YjZiZThkZGY5ZGI1YjcyOGYyYjY3ODU2ZDg1NWZkNTE0YjUwMGQwYTc1YTM0ZTI2ZGJlYzIyYWMxMjY0YWQzNmU4MTljZGI4NGVhYmE4YTBjN2VhYjY5NTNhM2I3YjM0ZWY4OTc4YjQ=
+        token-validity-in-seconds: 86400
+        token-validity-in-seconds-for-remember-me: 2592000
+
+logging:
+  level:
+    org.springdoc: DEBUG
+    com.fasterxml.jackson.databind: DEBUG

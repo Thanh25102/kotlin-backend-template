@@ -1,4 +1,4 @@
-package com.khipster.template.khipstertemplate.module.products
+package com.khipster.template.khipstertemplate.modules.products
 
 fun ProductDTO.toEntity(): Product {
     return Product(

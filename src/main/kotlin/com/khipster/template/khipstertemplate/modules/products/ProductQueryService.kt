@@ -1,4 +1,4 @@
-package com.khipster.template.khipstertemplate.module.products
+package com.khipster.template.khipstertemplate.modules.products
 
 import org.slf4j.LoggerFactory
 import org.springframework.data.domain.Page

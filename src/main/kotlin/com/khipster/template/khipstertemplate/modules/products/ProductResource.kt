@@ -1,4 +1,4 @@
-package com.khipster.template.khipstertemplate.module.products
+package com.khipster.template.khipstertemplate.modules.products
 
 import com.khipster.template.khipstertemplate.config.requireIdEqualNotNull
 import com.khipster.template.khipstertemplate.config.requireIdNotNull
@@ -15,7 +15,6 @@ import tech.jhipster.web.util.HeaderUtil
 import tech.jhipster.web.util.PaginationUtil
 import java.net.URI
 import java.net.URISyntaxException
-import kotlin.Throws
 
 @RestController
 @RequestMapping("/api")

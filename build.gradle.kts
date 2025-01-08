@@ -53,10 +53,8 @@ dependencies {
     annotationProcessor("org.mapstruct:mapstruct-processor:1.5.5.Final")
     annotationProcessor("org.projectlombok:lombok-mapstruct-binding:0.2.0")
 
-
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.7.0")
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
-
 
     implementation("tech.jhipster:jhipster-dependencies:8.7.2")
     implementation("tech.jhipster:jhipster-framework:8.7.2")
@@ -108,6 +106,7 @@ allOpen {
     annotation("jakarta.persistence.MappedSuperclass")
     annotation("jakarta.persistence.Embeddable")
 }
+
 
 tasks.withType<Test> {
     useJUnitPlatform()

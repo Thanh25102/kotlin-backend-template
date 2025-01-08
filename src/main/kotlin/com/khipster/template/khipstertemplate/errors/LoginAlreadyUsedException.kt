@@ -2,7 +2,6 @@ package com.khipster.template.khipstertemplate.errors
 
 import org.zalando.problem.Exceptional
 
-@SuppressWarnings("java:S110") // Inheritance tree of classes should not be too deep
 class LoginAlreadyUsedException :
     BadRequestAlertException(LOGIN_ALREADY_USED_TYPE, "Login name already used!", "userManagement", "userexists") {
 

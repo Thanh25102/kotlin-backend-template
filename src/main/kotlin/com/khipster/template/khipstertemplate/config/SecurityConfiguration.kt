@@ -2,8 +2,8 @@ package com.khipster.template.khipstertemplate.config
 
 import com.khipster.template.khipstertemplate.config.security.ADMIN
 import com.khipster.template.khipstertemplate.config.security.jwt.JWTConfigurer
-import com.khipster.template.khipstertemplate.config.security.jwt.TokenProvider
 import org.springframework.context.annotation.Bean
+import org.springframework.context.annotation.Configuration
 import org.springframework.http.HttpMethod
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
@@ -18,10 +18,10 @@ import org.springframework.web.filter.CorsFilter
 import tech.jhipster.config.JHipsterProperties
 
 @EnableWebSecurity
+@Configuration
 @EnableMethodSecurity(prePostEnabled = true, securedEnabled = true)
 class SecurityConfiguration(
     private val jHipsterProperties: JHipsterProperties,
-    private val tokenProvider: TokenProvider,
     private val corsFilter: CorsFilter,
 ) {
 
@@ -30,7 +30,7 @@ class SecurityConfiguration(
 
     @Bean
     @Throws(Exception::class)
-    fun filterChain(http: HttpSecurity): SecurityFilterChain {
+    fun filterChain(http: HttpSecurity, jwtConfigurer: JWTConfigurer): SecurityFilterChain {
         http
             .csrf { csrf ->
                 csrf
@@ -46,7 +46,7 @@ class SecurityConfiguration(
                     .referrerPolicy { referrer ->
                         referrer.policy(ReferrerPolicyHeaderWriter.ReferrerPolicy.STRICT_ORIGIN_WHEN_CROSS_ORIGIN)
                     }
-                    .permissionsPolicy { permissions ->
+                    .permissionsPolicyHeader { permissions ->
                         permissions.policy("camera=(), fullscreen=(self), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), midi=(), payment=(), sync-xhr=()")
                     }
             }
@@ -56,10 +56,18 @@ class SecurityConfiguration(
             .authorizeHttpRequests { requests ->
                 requests
                     .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                    .requestMatchers("/app/**/*.{js,html}").permitAll()
                     .requestMatchers("/i18n/**").permitAll()
                     .requestMatchers("/content/**").permitAll()
                     .requestMatchers("/swagger-ui/**").permitAll()
+                    // swagger resources
+                    .requestMatchers("/swagger-ui/index.html").permitAll()
+                    .requestMatchers("/swagger-ui/**").permitAll()
+                    .requestMatchers("/v3/api-docs/**").permitAll()
+                    .requestMatchers("/api-docs").permitAll()
+                    .requestMatchers("/api-docs/**").permitAll()
+                    .requestMatchers("/swagger-ui-custom.html").permitAll()
+                    .requestMatchers("/api-docs/swagger-config").permitAll()
+                    .requestMatchers("/v3/api-docs/swagger-config").permitAll()
                     .requestMatchers("/test/**").permitAll()
                     .requestMatchers("/h2-console/**").permitAll()
                     .requestMatchers("/api/authenticate").permitAll()
@@ -74,16 +82,15 @@ class SecurityConfiguration(
                     .requestMatchers("/management/health/**").permitAll()
                     .requestMatchers("/management/info").permitAll()
                     .requestMatchers("/management/prometheus").permitAll()
+                    .requestMatchers("/swagger-ui-custom.html").permitAll()
                     .requestMatchers("/management/**").hasAuthority(ADMIN)
-                    .anyRequest().authenticated()
+                    .anyRequest()
+                    .authenticated()
             }
-            .httpBasic { } // Enables HTTP Basic Authentication
-            .with(securityConfigurerAdapter()) {
-                // Custom configurations (if applicable)
-            }
+            .formLogin { it.disable() }
+            .with(jwtConfigurer) { }
 
         return http.build()
     }
 
-    private fun securityConfigurerAdapter() = JWTConfigurer(tokenProvider)
 }

@@ -1,4 +1,4 @@
-package com.khipster.template.khipstertemplate.module.products
+package com.khipster.template.khipstertemplate.modules.products
 
 import org.springdoc.core.annotations.ParameterObject
 import tech.jhipster.service.Criteria

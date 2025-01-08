@@ -8,5 +8,6 @@ import org.springframework.boot.runApplication
 class KhipsterTemplateApplication
 
 fun main(args: Array<String>) {
+    println("email.activation.greeting")
     runApplication<KhipsterTemplateApplication>(*args)
 }

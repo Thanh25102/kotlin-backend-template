@@ -2,11 +2,13 @@
 
 package com.khipster.template.khipstertemplate.config.security
 
+import com.khipster.template.khipstertemplate.config.PASSWORD_MAX_LENGTH
+import com.khipster.template.khipstertemplate.config.PASSWORD_MIN_LENGTH
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.core.userdetails.UserDetails
-import java.util.Optional
+import java.util.*
 
 /**
  * Get the login of the current user.
@@ -58,36 +60,40 @@ fun isAuthenticated(): Boolean {
 }
 
 /**
-* Checks if the current user has any of the authorities.
-*
-* @param authorities the authorities to check.
-* @return true if the current user has any of the authorities, false otherwise.
-*/
+ * Checks if the current user has any of the authorities.
+ *
+ * @param authorities the authorities to check.
+ * @return true if the current user has any of the authorities, false otherwise.
+ */
 fun hasCurrentUserAnyOfAuthorities(vararg authorities: String): Boolean {
     val authentication = SecurityContextHolder.getContext().authentication
     return authentication != null && getAuthorities(authentication)?.any { authorities.contains(it) } ?: false
 }
 
 /**
-* Checks if the current user has none of the authorities.
-*
-* @param authorities the authorities to check.
-* @return true if the current user has none of the authorities, false otherwise.
-*/
+ * Checks if the current user has none of the authorities.
+ *
+ * @param authorities the authorities to check.
+ * @return true if the current user has none of the authorities, false otherwise.
+ */
 fun hasCurrentUserNoneOfAuthorities(vararg authorities: String): Boolean {
     return !hasCurrentUserAnyOfAuthorities(*authorities)
 }
 
 /**
-* Checks if the current user has a specific authority.
-*
-* @param authority the authority to check.
-* @return true if the current user has the authority, false otherwise.
-*/
+ * Checks if the current user has a specific authority.
+ *
+ * @param authority the authority to check.
+ * @return true if the current user has the authority, false otherwise.
+ */
 fun hasCurrentUserThisAuthority(authority: String): Boolean {
     return hasCurrentUserAnyOfAuthorities(authority)
 }
 
 fun getAuthorities(authentication: Authentication): List<String>? {
     return authentication.authorities.map(GrantedAuthority::getAuthority)
+}
+
+fun String.isPasswordLengthInValid(): Boolean {
+    return (this.isEmpty() || this.length < PASSWORD_MIN_LENGTH || this.length > PASSWORD_MAX_LENGTH)
 }

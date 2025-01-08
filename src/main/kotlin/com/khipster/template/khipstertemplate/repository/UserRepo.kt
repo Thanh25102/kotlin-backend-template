@@ -2,28 +2,29 @@ package com.khipster.template.khipstertemplate.repository
 
 import com.khipster.template.khipstertemplate.domain.User
 import org.springframework.cache.annotation.Cacheable
-import org.springframework.data.domain.*
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.EntityGraph
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
 import java.time.Instant
-import java.util.Optional
+import java.util.*
 
 /**
  * Spring Data JPA repository for the {@link User} entity.
  */
 @Repository
-interface UserRepository : JpaRepository<User, Long> {
+interface UserRepo : JpaRepository<User, Long> {
 
-    fun findOneByActivationKey(activationKey: String): Optional<User>
+    fun findOneByActivationKey(activationKey: String): User?
 
     fun findAllByActivatedIsFalseAndActivationKeyIsNotNullAndCreatedDateBefore(dateTime: Instant): List<User>
 
-    fun findOneByResetKey(resetKey: String): Optional<User>
+    fun findOneByResetKey(resetKey: String): User?
 
-    fun findOneByEmailIgnoreCase(email: String?): Optional<User>
+    fun findOneByEmailIgnoreCase(email: String?): User?
 
-    fun findOneByLogin(login: String): Optional<User>
+    fun findOneByLoginOrEmail(login: String, email: String? = null): User?
 
     @EntityGraph(attributePaths = ["authorities"])
     @Cacheable(cacheNames = [USERS_BY_LOGIN_CACHE])

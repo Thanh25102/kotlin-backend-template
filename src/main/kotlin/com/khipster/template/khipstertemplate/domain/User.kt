@@ -19,7 +19,6 @@ import org.jetbrains.annotations.NotNull
 import java.io.Serializable
 import java.time.Instant
 
-
 /**
  * A user.
  */
@@ -110,7 +109,6 @@ class User(
     override fun toString(): String {
         return "User(id=$id, login=$login, password=$password, firstName=$firstName, lastName=$lastName, email=$email, activated=$activated, langKey=$langKey, imageUrl=$imageUrl, activationKey=$activationKey, resetKey=$resetKey, resetDate=$resetDate, authorities=$authorities)"
     }
-
 
     companion object {
         private const val serialVersionUID = 1L

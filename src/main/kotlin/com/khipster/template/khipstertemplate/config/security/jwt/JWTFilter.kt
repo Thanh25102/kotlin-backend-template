@@ -23,6 +23,7 @@ class JWTFilter(private val tokenProvider: TokenProvider) : GenericFilterBean() 
             val authentication = this.tokenProvider.getAuthentication(jwt)
             SecurityContextHolder.getContext().authentication = authentication
         }
+        println("JWTFilter: $jwt")
         filterChain.doFilter(servletRequest, servletResponse)
     }
 

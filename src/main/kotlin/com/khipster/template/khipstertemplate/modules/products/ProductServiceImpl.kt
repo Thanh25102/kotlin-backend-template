@@ -1,6 +1,5 @@
-package com.khipster.template.khipstertemplate.module.products
+package com.khipster.template.khipstertemplate.modules.products
 
-import org.slf4j.LoggerFactory
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.repository.findByIdOrNull
@@ -13,17 +12,15 @@ class ProductServiceImpl(
     private val productRepo: ProductRepo,
 ) : ProductService, QueryService<Product>() {
 
-    private val log = LoggerFactory.getLogger(javaClass)
-
     @Transactional(readOnly = false)
     override fun save(productDTO: ProductDTO): ProductDTO {
-        if (productDTO.id != null) throw RuntimeException("A new product cannot already have an ID")
+        requireNotNull(productRepo.findByIdOrNull(productDTO.id)) { "A new product cannot already have an ID" }
         return productRepo.save(productDTO.toEntity()).toDto()
     }
 
     @Transactional(readOnly = false)
     override fun update(productDTO: ProductDTO): ProductDTO {
-        if (productDTO.id == null) throw RuntimeException("Cannot update a product without an ID")
+        requireNotNull(productRepo.findByIdOrNull(productDTO.id)) { "Entity not found" }
         return productRepo.save(productDTO.toEntity()).toDto()
     }
 
