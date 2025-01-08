@@ -2,18 +2,22 @@ package com.khipster.template.khipstertemplate.modules.products
 
 import com.khipster.template.khipstertemplate.config.requireIdEqualNotNull
 import com.khipster.template.khipstertemplate.config.requireIdNotNull
+import com.khipster.template.khipstertemplate.config.toModel
 import com.khipster.template.khipstertemplate.config.wrapOrNotFound
+import com.khipster.template.khipstertemplate.domain.ApiResponse
 import com.khipster.template.khipstertemplate.errors.BadRequestAlertException
 import jakarta.validation.Valid
 import jakarta.validation.constraints.NotNull
 import org.springdoc.core.annotations.ParameterObject
 import org.springframework.data.domain.Pageable
+import org.springframework.data.web.PagedResourcesAssembler
+import org.springframework.hateoas.EntityModel
+import org.springframework.hateoas.PagedModel
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder
 import tech.jhipster.web.util.HeaderUtil
 import tech.jhipster.web.util.PaginationUtil
-import java.net.URI
 import java.net.URISyntaxException
 
 @RestController
@@ -30,19 +34,19 @@ class ProductResource(
     private var applicationName: String? = "test app name"
 
     @PostMapping("/products")
-    fun createProduct(@Valid @RequestBody productDTO: ProductDTO): ResponseEntity<ProductDTO> {
+    fun createProduct(@Valid @RequestBody productDTO: ProductDTO): ResponseEntity<ApiResponse<ProductDTO>> {
         productDTO.id = null
         val result = productService.save(productDTO)
-        return ResponseEntity.created(URI("/api/products/${result.id}"))
-            .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.id.toString()))
-            .body(result)
+        return result.wrapOrNotFound(
+            headers = HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.id.toString())
+        )
     }
 
     @PutMapping("/products/{id}")
     fun updateProduct(
         @PathVariable(value = "id", required = false) id: Long,
         @Valid @RequestBody productDTO: ProductDTO
-    ): ResponseEntity<ProductDTO> {
+    ): ResponseEntity<ApiResponse<ProductDTO>> {
 
         requireIdNotNull(productDTO.id) { BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull") }
 
@@ -57,14 +61,9 @@ class ProductResource(
         }
 
         val result = productService.update(productDTO)
-        return ResponseEntity.ok()
-            .headers(
-                HeaderUtil.createEntityUpdateAlert(
-                    applicationName, true, ENTITY_NAME,
-                    productDTO.id.toString()
-                )
-            )
-            .body(result)
+        return result.wrapOrNotFound(
+            headers = HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, productDTO.id.toString())
+        )
     }
 
 
@@ -73,7 +72,7 @@ class ProductResource(
     fun partialUpdateProduct(
         @PathVariable(value = "id", required = false) id: Long,
         @NotNull @RequestBody productDTO: ProductDTO
-    ): ResponseEntity<ProductDTO> {
+    ): ResponseEntity<ApiResponse<ProductDTO>> {
 
         requireIdNotNull(productDTO.id) { BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull") }
 
@@ -91,28 +90,31 @@ class ProductResource(
         val result = productService.partialUpdate(productDTO)
 
         return result.wrapOrNotFound(
-            HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, productDTO.id.toString())
+            headers = HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, productDTO.id.toString())
         )
     }
 
     @GetMapping("/products")
     fun getAllProducts(
         criteria: ProductCriteria,
-        @ParameterObject pageable: Pageable
-    ): ResponseEntity<MutableList<ProductDTO>> {
+        @ParameterObject pageable: Pageable,
+        pageableAssembler: PagedResourcesAssembler<ProductDTO>
+    ): ResponseEntity<ApiResponse<PagedModel<EntityModel<ProductDTO?>?>>> {
         val page = productQueryService.findByCriteria(criteria, pageable)
         val headers =
             PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page)
-        return ResponseEntity.ok().headers(headers).body(page.content)
+
+        throw Exception("Not implemented")
+        return page.toModel(pageableAssembler).wrapOrNotFound(headers = headers)
     }
 
     @GetMapping("/products/count")
-    fun countProducts(criteria: ProductCriteria): ResponseEntity<Long> {
-        return ResponseEntity.ok().body(productQueryService.countByCriteria(criteria))
+    fun countProducts(criteria: ProductCriteria): ResponseEntity<ApiResponse<Long>> {
+        return productQueryService.countByCriteria(criteria).wrapOrNotFound()
     }
 
     @GetMapping("/products/{id}")
-    fun getProduct(@PathVariable id: Long): ResponseEntity<ProductDTO> {
+    fun getProduct(@PathVariable id: Long): ResponseEntity<ApiResponse<ProductDTO>> {
         val productDTO = productService.findOne(id)
         return productDTO.wrapOrNotFound()
     }

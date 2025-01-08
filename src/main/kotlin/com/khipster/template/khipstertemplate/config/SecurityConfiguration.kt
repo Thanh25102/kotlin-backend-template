@@ -1,10 +1,13 @@
 package com.khipster.template.khipstertemplate.config
 
 import com.khipster.template.khipstertemplate.config.security.ADMIN
-import com.khipster.template.khipstertemplate.config.security.jwt.JWTConfigurer
+import com.khipster.template.khipstertemplate.config.security.jwt.JWTFilter
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.context.annotation.Import
 import org.springframework.http.HttpMethod
+import org.springframework.security.authentication.AuthenticationManager
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
@@ -15,14 +18,17 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.security.web.header.writers.ReferrerPolicyHeaderWriter
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher
 import org.springframework.web.filter.CorsFilter
+import org.zalando.problem.spring.web.advice.security.SecurityProblemSupport
 import tech.jhipster.config.JHipsterProperties
 
 @EnableWebSecurity
 @Configuration
 @EnableMethodSecurity(prePostEnabled = true, securedEnabled = true)
+@Import(SecurityProblemSupport::class)
 class SecurityConfiguration(
     private val jHipsterProperties: JHipsterProperties,
     private val corsFilter: CorsFilter,
+    private val problemSupport: SecurityProblemSupport
 ) {
 
     @Bean
@@ -30,7 +36,10 @@ class SecurityConfiguration(
 
     @Bean
     @Throws(Exception::class)
-    fun filterChain(http: HttpSecurity, jwtConfigurer: JWTConfigurer): SecurityFilterChain {
+    fun securityFilterChain(
+        http: HttpSecurity,
+        jwtFilter: JWTFilter
+    ): SecurityFilterChain {
         http
             .csrf { csrf ->
                 csrf
@@ -38,6 +47,7 @@ class SecurityConfiguration(
                     .disable()
             }
             .addFilterBefore(corsFilter, UsernamePasswordAuthenticationFilter::class.java)
+            .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter::class.java)
             .headers { headers ->
                 headers
                     .contentSecurityPolicy { csp ->
@@ -59,6 +69,7 @@ class SecurityConfiguration(
                     .requestMatchers("/i18n/**").permitAll()
                     .requestMatchers("/content/**").permitAll()
                     .requestMatchers("/swagger-ui/**").permitAll()
+                    .requestMatchers("/api/register", "/register", "/api/authenticate").permitAll()
                     // swagger resources
                     .requestMatchers("/swagger-ui/index.html").permitAll()
                     .requestMatchers("/swagger-ui/**").permitAll()
@@ -87,10 +98,18 @@ class SecurityConfiguration(
                     .anyRequest()
                     .authenticated()
             }
+            .exceptionHandling {
+                it.authenticationEntryPoint(problemSupport)
+                it.accessDeniedHandler(problemSupport)
+            }
             .formLogin { it.disable() }
-            .with(jwtConfigurer) { }
 
         return http.build()
     }
 
+    @Bean
+    @Throws(Exception::class)
+    fun authenticationManager(config: AuthenticationConfiguration): AuthenticationManager = config.authenticationManager
+
 }
+

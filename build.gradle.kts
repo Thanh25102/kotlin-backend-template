@@ -45,7 +45,7 @@ dependencies {
     implementation("org.flywaydb:flyway-mysql")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
 
-    implementation("org.zalando:problem-spring-web:0.23.0")
+    implementation("org.zalando:problem-spring-web:0.29.1")
     implementation("org.hibernate.orm:hibernate-jpamodelgen:6.5.3.Final")
 
     implementation("org.mapstruct:mapstruct:1.5.5.Final")

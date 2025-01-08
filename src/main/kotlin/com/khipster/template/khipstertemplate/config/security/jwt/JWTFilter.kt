@@ -1,47 +1,59 @@
-package com.khipster.template.khipstertemplate.config.security.jwt
+    package com.khipster.template.khipstertemplate.config.security.jwt
 
-import jakarta.servlet.FilterChain
-import jakarta.servlet.ServletException
-import jakarta.servlet.ServletRequest
-import jakarta.servlet.ServletResponse
-import jakarta.servlet.http.HttpServletRequest
-import org.springframework.security.core.context.SecurityContextHolder
-import org.springframework.web.filter.GenericFilterBean
-import java.io.IOException
+    import jakarta.servlet.FilterChain
+    import jakarta.servlet.ServletException
+    import jakarta.servlet.http.HttpServletRequest
+    import jakarta.servlet.http.HttpServletResponse
+    import org.springframework.security.core.context.SecurityContextHolder
+    import org.springframework.stereotype.Component
+    import org.springframework.web.filter.OncePerRequestFilter
+    import java.io.IOException
 
-/**
- * Filters incoming requests and installs a Spring Security principal if a header corresponding to a valid user is
- * found.
- */
-class JWTFilter(private val tokenProvider: TokenProvider) : GenericFilterBean() {
+    /**
+     * Filters incoming requests and installs a Spring Security principal if a header corresponding to a valid user is
+     * found.
+     */
+    @Component
+    class JWTFilter(private val tokenProvider: TokenProvider) : OncePerRequestFilter() {
 
-    @Throws(IOException::class, ServletException::class)
-    override fun doFilter(servletRequest: ServletRequest, servletResponse: ServletResponse, filterChain: FilterChain) {
-        val httpServletRequest = servletRequest as HttpServletRequest
-        val jwt = resolveToken(httpServletRequest)
-        if (!jwt.isNullOrBlank() && this.tokenProvider.validateToken(jwt)) {
-            val authentication = this.tokenProvider.getAuthentication(jwt)
-            SecurityContextHolder.getContext().authentication = authentication
+        @Throws(IOException::class, ServletException::class)
+        override fun doFilterInternal(
+            servletRequest: HttpServletRequest,
+            servletResponse: HttpServletResponse,
+            filterChain: FilterChain
+        ) {
+            val jwt = resolveToken(servletRequest)
+            val bearerToken = servletRequest.getHeader(AUTHORIZATION_HEADER)
+
+            if (jwt.isNullOrBlank() || !bearerToken.startsWith("Bearer ")) {
+                filterChain.doFilter(servletRequest, servletResponse)
+                return
+            }
+
+            if (jwt.isNotBlank() && this.tokenProvider.validateToken(jwt)) {
+                val authentication = this.tokenProvider.getAuthentication(jwt)
+                SecurityContextHolder.getContext().authentication = authentication
+                println("name ${authentication.name}")
+                filterChain.doFilter(servletRequest, servletResponse)
+                return
+            }
         }
-        println("JWTFilter: $jwt")
-        filterChain.doFilter(servletRequest, servletResponse)
-    }
 
-    private fun resolveToken(request: HttpServletRequest): String? {
-        val bearerToken = request.getHeader(AUTHORIZATION_HEADER)
-        if (!bearerToken.isNullOrBlank() && bearerToken.startsWith("Bearer ")) {
-            return bearerToken.substring(7)
+        private fun resolveToken(request: HttpServletRequest): String? {
+            val bearerToken = request.getHeader(AUTHORIZATION_HEADER)
+            if (!bearerToken.isNullOrBlank() && bearerToken.startsWith("Bearer ")) {
+                return bearerToken.substring(7)
+            }
+            val jwt = request.getParameter(AUTHORIZATION_TOKEN)
+            if (!jwt.isNullOrBlank()) {
+                return jwt
+            }
+            return null
         }
-        val jwt = request.getParameter(AUTHORIZATION_TOKEN)
-        if (!jwt.isNullOrBlank()) {
-            return jwt
+
+        companion object {
+            const val AUTHORIZATION_HEADER = "Authorization"
+
+            const val AUTHORIZATION_TOKEN: String = "access_token"
         }
-        return null
     }
-
-    companion object {
-        const val AUTHORIZATION_HEADER = "Authorization"
-
-        const val AUTHORIZATION_TOKEN: String = "access_token"
-    }
-}

@@ -28,7 +28,7 @@ class AuthService(
             password = passwordEncoder.encode(userRegister.password),
             firstName = userRegister.firstName,
             lastName = userRegister.lastName,
-            email = userRegister.email,
+            email = userRegister.email?.lowercase(),
             imageUrl = userRegister.imageUrl,
             activated = false,
             activationKey = RandomUtil.generateActivationKey(),

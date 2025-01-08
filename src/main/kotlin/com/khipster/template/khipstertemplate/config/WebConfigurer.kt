@@ -11,6 +11,7 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.core.env.Environment
 import org.springframework.core.env.Profiles
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing
 import org.springframework.util.CollectionUtils
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 import org.springframework.web.filter.CorsFilter
@@ -26,6 +27,7 @@ import java.nio.file.Paths
  * Configuration of web application with Servlet 3.0 APIs.
  */
 @Configuration
+@EnableJpaAuditing
 class WebConfigurer(
     private val env: Environment,
     private val jHipsterProperties: JHipsterProperties
