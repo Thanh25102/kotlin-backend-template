@@ -1,6 +1,6 @@
 package com.khipster.template.khipstertemplate.domain
 
-data class ApiResponse<T>(
+data class  ApiResponse<T>(
     val message: String,
     val status: Int,
     val data: T?

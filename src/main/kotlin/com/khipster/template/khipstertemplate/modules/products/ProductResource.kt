@@ -2,13 +2,13 @@ package com.khipster.template.khipstertemplate.modules.products
 
 import com.khipster.template.khipstertemplate.config.requireIdEqualNotNull
 import com.khipster.template.khipstertemplate.config.requireIdNotNull
-import com.khipster.template.khipstertemplate.config.toModel
 import com.khipster.template.khipstertemplate.config.wrapOrNotFound
 import com.khipster.template.khipstertemplate.domain.ApiResponse
 import com.khipster.template.khipstertemplate.errors.BadRequestAlertException
 import jakarta.validation.Valid
 import jakarta.validation.constraints.NotNull
 import org.springdoc.core.annotations.ParameterObject
+import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.web.PagedResourcesAssembler
 import org.springframework.hateoas.EntityModel
@@ -19,6 +19,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder
 import tech.jhipster.web.util.HeaderUtil
 import tech.jhipster.web.util.PaginationUtil
 import java.net.URISyntaxException
+import kotlin.Throws
 
 @RestController
 @RequestMapping("/api")
@@ -85,8 +86,6 @@ class ProductResource(
                 "idnotfound"
             )
         }
-
-
         val result = productService.partialUpdate(productDTO)
 
         return result.wrapOrNotFound(
@@ -98,14 +97,13 @@ class ProductResource(
     fun getAllProducts(
         criteria: ProductCriteria,
         @ParameterObject pageable: Pageable,
-        pageableAssembler: PagedResourcesAssembler<ProductDTO>
-    ): ResponseEntity<ApiResponse<PagedModel<EntityModel<ProductDTO?>?>>> {
+    ): ResponseEntity<ApiResponse<Page<ProductDTO>>> {
         val page = productQueryService.findByCriteria(criteria, pageable)
         val headers =
             PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page)
 
-        throw Exception("Not implemented")
-        return page.toModel(pageableAssembler).wrapOrNotFound(headers = headers)
+        val pagedAssembled = PagedResourcesAssembler<ProductDTO>(null, null)
+        return page.wrapOrNotFound(headers = headers)
     }
 
     @GetMapping("/products/count")

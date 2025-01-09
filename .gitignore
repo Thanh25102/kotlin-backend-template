@@ -17,6 +17,9 @@ bin/
 !**/src/main/**/bin/
 !**/src/test/**/bin/
 
+
+frontend
+
 ### IntelliJ IDEA ###
 .idea
 *.iws
@@ -38,3 +41,4 @@ out/
 
 ### Kotlin ###
 .kotlin
+
