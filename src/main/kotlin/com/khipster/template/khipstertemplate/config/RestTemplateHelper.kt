@@ -13,21 +13,17 @@ inline fun <reified T> RestTemplate.get(
     headers: Map<String, String> = emptyMap()
 ): T? {
     return try {
-        // Xây dựng URI với query parameters
         val uriBuilder = UriComponentsBuilder.fromUriString(uri)
         params.forEach { (key, value) -> uriBuilder.queryParam(key, value) }
         val finalUri = uriBuilder.build().toUriString()
 
-        // Tạo HttpHeaders
         val httpHeaders = HttpHeaders()
         headers.forEach { (key, value) ->
             httpHeaders[key] = value
         }
 
-        // Request entity rỗng (GET thường không có body)
         val requestEntity = HttpEntity<Unit>(httpHeaders)
 
-        // Gọi API
         val response = this.exchange(
             finalUri,
             HttpMethod.GET,
