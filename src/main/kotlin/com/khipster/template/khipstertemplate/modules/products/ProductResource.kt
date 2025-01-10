@@ -97,13 +97,12 @@ class ProductResource(
     fun getAllProducts(
         criteria: ProductCriteria,
         @ParameterObject pageable: Pageable,
-    ): ResponseEntity<ApiResponse<Page<ProductDTO>>> {
+    ): ResponseEntity<ApiResponse<List<ProductDTO>>> {
         val page = productQueryService.findByCriteria(criteria, pageable)
         val headers =
             PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page)
 
-        val pagedAssembled = PagedResourcesAssembler<ProductDTO>(null, null)
-        return page.wrapOrNotFound(headers = headers)
+        return page.content.wrapOrNotFound(headers = headers)
     }
 
     @GetMapping("/products/count")

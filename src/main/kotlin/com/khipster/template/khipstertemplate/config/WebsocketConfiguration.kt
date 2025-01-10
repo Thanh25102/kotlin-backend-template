@@ -6,7 +6,14 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.http.server.ServerHttpRequest
 import org.springframework.http.server.ServerHttpResponse
 import org.springframework.http.server.ServletServerHttpRequest
+import org.springframework.messaging.Message
+import org.springframework.messaging.MessageChannel
+import org.springframework.messaging.simp.config.ChannelRegistration
 import org.springframework.messaging.simp.config.MessageBrokerRegistry
+import org.springframework.messaging.simp.stomp.StompCommand
+import org.springframework.messaging.simp.stomp.StompHeaderAccessor
+import org.springframework.messaging.support.ChannelInterceptor
+import org.springframework.messaging.support.MessageHeaderAccessor
 import org.springframework.security.authentication.AnonymousAuthenticationToken
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.web.socket.WebSocketHandler
@@ -39,35 +46,6 @@ class WebsocketConfiguration(
         registry.addEndpoint("/websocket/tracker")
             .setHandshakeHandler(defaultHandshakeHandler())
             .setAllowedOrigins(*allowedOrigins)
-            .withSockJS()
-            .setInterceptors(httpSessionHandshakeInterceptor())
-    }
-
-    @Bean
-    fun httpSessionHandshakeInterceptor(): HandshakeInterceptor {
-        return object : HandshakeInterceptor {
-
-            @Throws(Exception::class)
-            override fun beforeHandshake(
-                request: ServerHttpRequest,
-                response: ServerHttpResponse,
-                wsHandler: WebSocketHandler,
-                attributes: MutableMap<String, Any>
-            ): Boolean {
-                if (request is ServletServerHttpRequest) {
-                    attributes[IP_ADDRESS] = request.remoteAddress
-                }
-                return true
-            }
-
-            override fun afterHandshake(
-                request: ServerHttpRequest,
-                response: ServerHttpResponse,
-                wsHandler: WebSocketHandler,
-                exception: Exception?
-            ) {
-            }
-        }
     }
 
     private fun defaultHandshakeHandler(): DefaultHandshakeHandler {
@@ -78,6 +56,7 @@ class WebsocketConfiguration(
                 attributes: Map<String?, Any?>
             ): Principal? {
                 var principal: Principal? = request.principal
+                println("principal: $principal")
                 if (principal == null) {
                     val authorities = mutableListOf<SimpleGrantedAuthority>()
                     authorities.add(SimpleGrantedAuthority(ANONYMOUS))
@@ -88,7 +67,4 @@ class WebsocketConfiguration(
         }
     }
 
-    companion object {
-        const val IP_ADDRESS = "IP_ADDRESS"
-    }
 }

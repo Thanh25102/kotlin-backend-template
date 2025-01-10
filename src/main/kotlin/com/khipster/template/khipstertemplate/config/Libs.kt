@@ -1,5 +1,6 @@
 package com.khipster.template.khipstertemplate.config
 
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.khipster.template.khipstertemplate.domain.ApiResponse
 import com.khipster.template.khipstertemplate.errors.BadRequestAlertException
 import org.springframework.data.domain.Page
@@ -10,7 +11,11 @@ import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.server.ResponseStatusException
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder
+import tech.jhipster.web.util.PaginationUtil
 import java.util.*
+
+import com.fasterxml.jackson.module.kotlin.readValue
 
 /**
  * Wrap the nullable value into a ResponseEntity with an OK status.
@@ -53,4 +58,18 @@ fun <T : Any> requireIdEqualNotNull(id: T?, targetId: T?, lazyMessage: () -> Bad
 
 fun <T> Page<T>.toModel(assembler: PagedResourcesAssembler<T>): PagedModel<EntityModel<T?>?> {
     return assembler.toModel(this)
+}
+
+fun <T> Page<T>.generatePaginationHttpHeaders(): HttpHeaders {
+    return PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), this)
+}
+
+inline fun <reified T> T.toJson(): String {
+    val mapper = jacksonObjectMapper()
+    return mapper.writeValueAsString(this)
+}
+
+inline fun <reified T> String.fromJson(): T {
+    val mapper = jacksonObjectMapper()
+    return mapper.readValue(this)
 }

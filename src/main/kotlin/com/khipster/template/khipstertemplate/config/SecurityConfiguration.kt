@@ -13,6 +13,8 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
+import org.springframework.security.oauth2.server.resource.web.BearerTokenResolver
+import org.springframework.security.oauth2.server.resource.web.DefaultBearerTokenResolver
 import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 import org.springframework.security.web.header.writers.ReferrerPolicyHeaderWriter
@@ -111,5 +113,11 @@ class SecurityConfiguration(
     @Throws(Exception::class)
     fun authenticationManager(config: AuthenticationConfiguration): AuthenticationManager = config.authenticationManager
 
+    @Bean
+    fun  bearerTokenResolver(): BearerTokenResolver {
+        var bearerTokenResolver = DefaultBearerTokenResolver();
+        bearerTokenResolver.setAllowUriQueryParameter(true);
+        return bearerTokenResolver;
+    }
 }
 

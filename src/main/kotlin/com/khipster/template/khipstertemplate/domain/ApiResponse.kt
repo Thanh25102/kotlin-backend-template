@@ -1,5 +1,7 @@
 package com.khipster.template.khipstertemplate.domain
 
+import org.springframework.http.ResponseEntity
+
 data class  ApiResponse<T>(
     val message: String,
     val status: Int,

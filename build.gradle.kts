@@ -41,12 +41,16 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-websocket")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
+    implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
     implementation("org.flywaydb:flyway-core")
     implementation("org.flywaydb:flyway-mysql")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
 
+    implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-xml")
+
     implementation("org.zalando:problem-spring-web:0.29.1")
     implementation("org.hibernate.orm:hibernate-jpamodelgen:6.5.3.Final")
+
 
     implementation("org.mapstruct:mapstruct:1.5.5.Final")
     kapt("org.mapstruct:mapstruct-processor:1.5.5.Final")

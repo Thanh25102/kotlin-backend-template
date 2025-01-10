@@ -15,7 +15,10 @@ spring:
   messages:
     basename: i18n/messages
     encoding: UTF-8
-    
+  threads:
+    virtual:
+      enabled: true
+
 springdoc:
   api-docs:
     path: /api-docs
@@ -44,7 +47,8 @@ jhipster:
       http://localhost:8100,https://localhost:8100,
       http://localhost:9000,https://localhost:9000,
       http://localhost:9060,https://localhost:9060,
-      http://localhost:5173
+      http://localhost:5173,https://localhost:5173,
+      http://localhost:5500,https://localhost:5500,
     allowed-methods: '*'
     allowed-headers: '*'
     exposed-headers: >
@@ -65,3 +69,9 @@ logging:
   level:
     org.springdoc: DEBUG
     com.fasterxml.jackson.databind: DEBUG
+
+third-party:
+  vms-api:
+    url: http://10.6.18.13
+    username: admin
+    password: admin

@@ -15,7 +15,8 @@ class WebsocketSecurityConfiguration {
 
     @Bean
     fun messageAuthorizationManager(messages: MessageMatcherDelegatingAuthorizationManager.Builder): AuthorizationManager<Message<*>> {
-        messages.simpDestMatchers("/user/**").hasRole("USER")
+        messages
+            .simpDestMatchers("/user/**").hasRole("USER")
             .nullDestMatcher().authenticated()
             .simpDestMatchers("/topic/tracker").hasAuthority(ADMIN)
             .simpDestMatchers("/topic/**").authenticated()
