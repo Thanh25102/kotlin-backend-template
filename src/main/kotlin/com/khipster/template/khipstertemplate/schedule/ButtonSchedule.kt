@@ -19,7 +19,6 @@ class ButtonSchedule(private val asyncTask: AsyncTask) {
 @Service
 class AsyncTask(
     private val smartControlService: SmartControlService,
-    private val smartControlHandler: SmartControlHandler
 ) {
     @Async
     fun asyncTask() {

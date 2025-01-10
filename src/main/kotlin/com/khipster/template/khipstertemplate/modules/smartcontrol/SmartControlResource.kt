@@ -13,7 +13,6 @@ class SmartControlResource(
     private val smartControlService: SmartControlService,
     private val smartControlQueryService: SmartControlQueryService
 ) {
-
     @GetMapping("/smart-controls")
     fun getAllSmartControls(
         smartControlCriteria: SmartControlCriteria,

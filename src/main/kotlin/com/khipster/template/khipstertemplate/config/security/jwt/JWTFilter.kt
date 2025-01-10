@@ -24,7 +24,7 @@ class JWTFilter(private val tokenProvider: TokenProvider) : OncePerRequestFilter
     ) {
         val jwt = resolveToken(servletRequest)
         println("jwt $jwt")
-        if (jwt != null && jwt.isNotBlank() && this.tokenProvider.validateToken(jwt)) {
+        if (!jwt.isNullOrBlank() && this.tokenProvider.validateToken(jwt)) {
             println("go 2")
             val authentication = this.tokenProvider.getAuthentication(jwt)
             SecurityContextHolder.getContext().authentication = authentication

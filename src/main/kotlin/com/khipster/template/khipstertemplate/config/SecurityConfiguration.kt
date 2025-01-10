@@ -11,6 +11,7 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer
 import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.oauth2.server.resource.web.BearerTokenResolver
@@ -90,7 +91,7 @@ class SecurityConfiguration(
                     .requestMatchers("/api/account/reset-password/finish").permitAll()
                     .requestMatchers("/api/admin/**").hasAuthority(ADMIN)
                     .requestMatchers("/api/**").authenticated()
-                    .requestMatchers("/websocket/**").authenticated()
+                    .requestMatchers("/websocket/**").permitAll()
                     .requestMatchers("/management/health").permitAll()
                     .requestMatchers("/management/health/**").permitAll()
                     .requestMatchers("/management/info").permitAll()
@@ -115,9 +116,10 @@ class SecurityConfiguration(
 
     @Bean
     fun  bearerTokenResolver(): BearerTokenResolver {
-        var bearerTokenResolver = DefaultBearerTokenResolver();
+        val bearerTokenResolver = DefaultBearerTokenResolver();
         bearerTokenResolver.setAllowUriQueryParameter(true);
         return bearerTokenResolver;
     }
+
 }
 

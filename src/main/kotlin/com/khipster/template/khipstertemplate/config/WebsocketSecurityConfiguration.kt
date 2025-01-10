@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.messaging.Message
 import org.springframework.messaging.simp.SimpMessageType
+import org.springframework.messaging.support.ChannelInterceptor
 import org.springframework.security.authorization.AuthorizationManager
 import org.springframework.security.config.annotation.web.socket.EnableWebSocketSecurity
 import org.springframework.security.messaging.access.intercept.MessageMatcherDelegatingAuthorizationManager
@@ -26,4 +27,13 @@ class WebsocketSecurityConfiguration {
         return messages.build()
     }
 
+    /**
+     * Magic của manh thanh để disable csrf cho ws security má ảo ma vc đ hiểu lý do =)))
+     */
+    @Bean
+    fun csrfChannelInterceptor(): ChannelInterceptor {
+        return object : ChannelInterceptor {}
+    }
+
 }
+
