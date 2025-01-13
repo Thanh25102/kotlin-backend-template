@@ -15,6 +15,7 @@ import java.time.Instant
 /**
  * Base abstract class for entities which will hold definitions for created, last modified by, created by,
  * last modified by attributes.
+ *
  */
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener::class)
