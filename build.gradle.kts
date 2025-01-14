@@ -45,6 +45,8 @@ dependencies {
     implementation("org.flywaydb:flyway-core")
     implementation("org.flywaydb:flyway-mysql")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
+    implementation("com.google.firebase:firebase-admin:9.4.3")
+
 
     implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-xml")
 
