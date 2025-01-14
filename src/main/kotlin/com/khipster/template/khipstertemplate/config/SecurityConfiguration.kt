@@ -74,6 +74,7 @@ class SecurityConfiguration(
                     .requestMatchers("/swagger-ui/**").permitAll()
                     .requestMatchers("/api/register", "/register", "/api/authenticate").permitAll()
                     // swagger resources
+                    .requestMatchers("/proxy","/proxy/**").permitAll()
                     .requestMatchers("/swagger-ui/index.html").permitAll()
                     .requestMatchers("/swagger-ui/**").permitAll()
                     .requestMatchers("/v3/api-docs/**").permitAll()
