@@ -1,5 +1,6 @@
 package com.khipster.template.khipstertemplate.modules.smartcontrol
 
+import jakarta.servlet.http.HttpServletResponse
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
@@ -24,41 +25,42 @@ class ReverseProxyResource(
 
     @GetMapping("/proxy/{filename:.+\\.m3u8}", produces = ["application/vnd.apple.mpegurl"])
     fun proxyM3U8(@PathVariable filename: String): ResponseEntity<String> {
+        println("Proxying $filename")
         val token = tokenManagement.getToken()
-        val targetUrl = "$vmsBaseUrl/camera/$filename"
+        val targetUrl = "$vmsBaseUrl/api/camera/$filename"
 
         val uri = UriComponentsBuilder.fromUriString(targetUrl)
             .queryParam("token", token)
             .toUriString()
 
-        println("TargetUrl: $uri")
-
+        println("uri: $uri")
         val response = restTemplate.getForEntity(uri, String::class.java)
         if (response.statusCode != HttpStatus.OK || response.body == null) {
             return ResponseEntity.status(HttpStatus.BAD_GATEWAY).build()
         }
-
         val m3u8Content = response.body!!
 
         val updatedContent = m3u8Content
-            .replace(Regex("""URI=\"([^\"]+)\""")) { matchResult ->
+            .replace(Regex("""URI="([^"]+)""")) { matchResult ->
                 val originalUri = matchResult.groupValues[1]
-                """URI=\"/proxy/$originalUri\"""
+                """URI="/proxy/$originalUri""""
             }
-            .replace(Regex("""^(?!#)(.*\\.m4s)""", RegexOption.MULTILINE)) { matchResult ->
+            .replace(Regex("""^(?!#)(.*\.m4s)""", RegexOption.MULTILINE)) { matchResult ->
                 val originalSegment = matchResult.groupValues[1]
                 "/proxy/$originalSegment"
             }
 
+        println("updatedContent: $updatedContent")
         return ResponseEntity.ok()
             .header(HttpHeaders.CONTENT_TYPE, "application/vnd.apple.mpegurl")
             .body(updatedContent)
     }
 
-    @GetMapping("/proxy/{fileName:.+}")
-    fun proxySegment(@PathVariable fileName: String): ResponseEntity<ByteArrayInputStream> {
+    @GetMapping("/proxy/{fileName:^(?!.*\\.m3u8$).+}")
+    fun proxySegment(@PathVariable fileName: String,response: HttpServletResponse){
+        println("Proxying2 $fileName")
         val token = tokenManagement.getToken()
-        val targetUrl = "$vmsBaseUrl/camera/$fileName"
+        val targetUrl = "$vmsBaseUrl/api/camera/$fileName?token=$token"
 
         val uri = UriComponentsBuilder.fromHttpUrl(targetUrl)
             .queryParam("token", token)
@@ -71,15 +73,15 @@ class ReverseProxyResource(
             else -> "application/octet-stream"
         }
 
-        val response = restTemplate.getForEntity(uri, ByteArray::class.java)
-        if (response.statusCode != HttpStatus.OK || response.body == null) {
-            return ResponseEntity.status(HttpStatus.BAD_GATEWAY).build()
+        val segmentResponse  = restTemplate.getForEntity(uri, ByteArray::class.java)
+        if (segmentResponse .statusCode != HttpStatus.OK || segmentResponse .body == null) {
+            response.status = HttpServletResponse.SC_BAD_GATEWAY
+            return
         }
 
-        val inputStream = ByteArrayInputStream(response.body!!)
+        response.contentType = contentType
+        response.outputStream.write(segmentResponse.body)
+        response.outputStream.flush()
 
-        return ResponseEntity.ok()
-            .header(HttpHeaders.CONTENT_TYPE, contentType)
-            .body(inputStream)
     }
 }
