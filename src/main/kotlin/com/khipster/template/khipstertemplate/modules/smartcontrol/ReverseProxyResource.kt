@@ -78,6 +78,9 @@ class ReverseProxyResource(
             response.status = HttpServletResponse.SC_BAD_GATEWAY
             return
         }
+        response.setHeader("Access-Control-Allow-Origin", "*")
+        response.setHeader("Access-Control-Allow-Methods", "GET, OPTIONS")
+        response.setHeader("Access-Control-Allow-Headers", "Content-Type")
 
         response.contentType = contentType
         response.outputStream.write(segmentResponse.body)
