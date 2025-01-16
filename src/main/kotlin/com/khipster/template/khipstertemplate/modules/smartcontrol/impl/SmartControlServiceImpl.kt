@@ -48,6 +48,7 @@ class SmartControlServiceImpl(
         return smartControlRepo.findWithButton().map { it.toDTO() }
     }
 
+
 }
 
 @JacksonXmlRootElement(localName = "response")
