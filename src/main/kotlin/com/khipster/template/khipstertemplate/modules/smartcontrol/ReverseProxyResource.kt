@@ -41,12 +41,12 @@ class ReverseProxyResource(
         val m3u8Content = response.body!!
 
         val updatedContent = m3u8Content
-            .replace(Regex("""URI="([^"]+)""")) { matchResult ->
-                val originalUri = matchResult.groupValues[1]
+            .replace(Regex("""URI="([^"]+)"""")) { matchResult ->
+                val originalUri = matchResult.groupValues[1].trim()
                 """URI="/proxy/$originalUri""""
             }
             .replace(Regex("""^(?!#)(.*\.m4s)""", RegexOption.MULTILINE)) { matchResult ->
-                val originalSegment = matchResult.groupValues[1]
+                val originalSegment = matchResult.groupValues[1].trim()
                 "/proxy/$originalSegment"
             }
 

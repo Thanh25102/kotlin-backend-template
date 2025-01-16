@@ -82,16 +82,18 @@ class WebConfigurer(
     @Bean
     fun corsFilter(): CorsFilter {
         val source = UrlBasedCorsConfigurationSource()
-//        val config = jHipsterProperties.cors
-//        if (!CollectionUtils.isEmpty(config.allowedOrigins) || ! CollectionUtils.isEmpty(config.allowedOriginPatterns)) {
-//            log.debug("Registering CORS filter")
-//            source.apply {
-//                registerCorsConfiguration("/api/**", config)
-//                registerCorsConfiguration("/management/**", config)
-//                registerCorsConfiguration("/v3/api-docs", config)
-//                registerCorsConfiguration("/swagger-ui/**", config)
-//            }
-//        }
+        val config = jHipsterProperties.cors
+        if (!CollectionUtils.isEmpty(config.allowedOrigins) || ! CollectionUtils.isEmpty(config.allowedOriginPatterns)) {
+            log.debug("Registering CORS filter")
+            source.apply {
+                registerCorsConfiguration("/api/**", config)
+                registerCorsConfiguration("/management/**", config)
+                registerCorsConfiguration("/v3/api-docs", config)
+                registerCorsConfiguration("/swagger-ui/**", config)
+                registerCorsConfiguration("/proxy/**", config)
+                registerCorsConfiguration("/proxy", config)
+            }
+        }
         return CorsFilter(source)
     }
 

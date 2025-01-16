@@ -49,7 +49,6 @@ class SecurityConfiguration(
                     .ignoringRequestMatchers(AntPathRequestMatcher("/h2-console/**"))
                     .disable()
             }
-            .cors { it.disable() }
             .addFilterBefore(corsFilter, UsernamePasswordAuthenticationFilter::class.java)
             .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter::class.java)
             .headers { headers ->
