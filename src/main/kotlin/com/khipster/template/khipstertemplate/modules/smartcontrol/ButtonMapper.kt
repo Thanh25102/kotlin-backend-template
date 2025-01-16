@@ -4,7 +4,7 @@ package com.khipster.template.khipstertemplate.modules.smartcontrol
 fun Buttons.toDto(): ButtonDTO = ButtonDTO(
     id = id,
     name = name,
-    value = value,
+    value = value?:0,
     cameraId = cameraId,
     smartControlId = smartControl?.id
 )
