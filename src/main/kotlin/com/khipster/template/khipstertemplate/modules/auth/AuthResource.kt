@@ -3,7 +3,7 @@ package com.khipster.template.khipstertemplate.modules.auth
 import com.khipster.template.khipstertemplate.config.security.isPasswordLengthInValid
 import com.khipster.template.khipstertemplate.config.wrapOrNotFound
 import com.khipster.template.khipstertemplate.domain.ApiResponse
-import com.khipster.template.khipstertemplate.repository.UserRepo
+import com.khipster.template.khipstertemplate.repository.AuthRepo
 import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/api")
-class AuthResource(private val authService: AuthService, private val userRepo: UserRepo) {
+class AuthResource(private val authService: AuthService, private val authRepo: AuthRepo) {
 
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
@@ -30,7 +30,7 @@ class AuthResource(private val authService: AuthService, private val userRepo: U
     @GetMapping("/users")
     fun getUser(): ResponseEntity<ApiResponse<UserDTO?>> {
         val authentication = SecurityContextHolder.getContext().authentication
-        val user = userRepo.findOneByLoginOrEmail(authentication.name, null)?.let {
+        val user = authRepo.findOneByLoginOrEmail(authentication.name, null)?.let {
             UserDTO(it.firstName + " " + it.lastName, it.email, it.login)
         }
         return user.wrapOrNotFound("Success")

@@ -35,8 +35,7 @@ class ProductResource(
     private var applicationName: String? = "test app name"
 
     @PostMapping("/products")
-    fun createProduct(@Valid @RequestBody productDTO: ProductDTO): ResponseEntity<ApiResponse<ProductDTO>> {
-        productDTO.id = null
+    fun createProduct(@Valid @RequestBody productDTO: CreateProductDTO): ResponseEntity<ApiResponse<ProductDTO>> {
         val result = productService.save(productDTO)
         return result.wrapOrNotFound(
             headers = HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.id.toString())

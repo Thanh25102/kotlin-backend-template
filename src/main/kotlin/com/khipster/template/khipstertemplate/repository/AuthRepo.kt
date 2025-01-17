@@ -14,7 +14,7 @@ import java.util.*
  * Spring Data JPA repository for the {@link User} entity.
  */
 @Repository
-interface UserRepo : JpaRepository<User, Long> {
+interface AuthRepo : JpaRepository<User, Long> {
 
     fun findOneByActivationKey(activationKey: String): User?
 

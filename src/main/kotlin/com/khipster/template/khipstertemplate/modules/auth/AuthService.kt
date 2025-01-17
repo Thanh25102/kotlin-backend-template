@@ -3,7 +3,7 @@ package com.khipster.template.khipstertemplate.modules.auth
 import com.khipster.template.khipstertemplate.config.security.USER
 import com.khipster.template.khipstertemplate.domain.User
 import com.khipster.template.khipstertemplate.repository.AuthorityRepo
-import com.khipster.template.khipstertemplate.repository.UserRepo
+import com.khipster.template.khipstertemplate.repository.AuthRepo
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
@@ -13,12 +13,12 @@ import tech.jhipster.security.RandomUtil
 @Service
 @Transactional
 class AuthService(
-    private val userRepo: UserRepo,
+    private val authRepo: AuthRepo,
     private val passwordEncoder: PasswordEncoder,
     private val authorityRepo: AuthorityRepo
 ) {
     fun register(userRegister: UserRegisterDTO): User {
-        userRepo.findOneByLoginOrEmail(userRegister.login, userRegister.email)?.let {
+        authRepo.findOneByLoginOrEmail(userRegister.login, userRegister.email)?.let {
             // check non-active user
             throw UsernameAlreadyUsedException()
         }
@@ -35,17 +35,17 @@ class AuthService(
             authorities = authorityRepo.findByIdOrNull(USER)?.let { mutableSetOf(it) } ?: mutableSetOf()
         )
 
-        val userSaved = userRepo.save(user)
+        val userSaved = authRepo.save(user)
         // clear cache if exist
 
         return userSaved
     }
 
     fun activate(key: String): User? {
-        return userRepo.findOneByActivationKey(key)?.let {
+        return authRepo.findOneByActivationKey(key)?.let {
             it.activated = true
             it.activationKey = null
-            userRepo.save(it)
+            authRepo.save(it)
         }
     }
 }

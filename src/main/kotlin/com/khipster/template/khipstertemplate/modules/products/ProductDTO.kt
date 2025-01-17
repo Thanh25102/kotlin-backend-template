@@ -9,3 +9,7 @@ data class ProductDTO(
     @get:NotNull var name: String? = null,
     @get:NotNull var price: BigDecimal? = null
 ) : Serializable
+data class CreateProductDTO(
+    @get:NotNull var name: String? = null,
+    @get:NotNull var price: BigDecimal? = null
+) : Serializable

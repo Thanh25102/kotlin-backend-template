@@ -13,9 +13,13 @@ class ProductServiceImpl(
 ) : ProductService, QueryService<Product>() {
 
     @Transactional(readOnly = false)
-    override fun save(productDTO: ProductDTO): ProductDTO {
-        requireNotNull(productRepo.findByIdOrNull(productDTO.id)) { "A new product cannot already have an ID" }
-        return productRepo.save(productDTO.toEntity()).toDto()
+    override fun save(productDTO: CreateProductDTO): ProductDTO {
+        return productRepo.save(
+            Product(
+                name = productDTO.name!!,
+                price = productDTO.price!!
+            )
+        ).toDto()
     }
 
     @Transactional(readOnly = false)

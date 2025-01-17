@@ -5,7 +5,7 @@ import org.springframework.data.domain.Pageable
 
 
 interface ProductService {
-    fun save(productDTO: ProductDTO): ProductDTO
+    fun save(productDTO: CreateProductDTO): ProductDTO
     fun update(productDTO: ProductDTO): ProductDTO
     fun partialUpdate(productDTO: ProductDTO): ProductDTO?
     fun findAll(pageable: Pageable): Page<ProductDTO>
