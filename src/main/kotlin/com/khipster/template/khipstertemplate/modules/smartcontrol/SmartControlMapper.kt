@@ -8,6 +8,22 @@ fun SmartControlDTO.toEntity(): SmartControls {
     )
 }
 
+fun CreateSmartControlDTO.toEntity(): SmartControls {
+    return SmartControls(
+        name = this.name,
+        domain = this.domain,
+    )
+}
+
+fun UpdateSmartControlDTO.toEntity(): SmartControls {
+    return SmartControls(
+        id = this.id,
+        name = this.name,
+        domain = this.domain,
+    )
+}
+
+
 fun SmartControls.toDTO(): SmartControlDTO {
     return SmartControlDTO(
         id = this.id,
