@@ -30,14 +30,17 @@ class SmartControlResource(
     }
 
     @PostMapping("/smart-controls")
-    fun createSmartControl(@RequestBody smartControlDTO: SmartControlDTO): ResponseEntity<ApiResponse<SmartControlDTO>> {
+    fun createSmartControl(@RequestBody smartControlDTO: CreateSmartControlDTO): ResponseEntity<ApiResponse<SmartControlDTO>> {
         return smartControlService.save(smartControlDTO).wrapOrNotFound()
     }
 
-    @PutMapping("/smart-controls")
-    fun updateSmartControl(@RequestBody smartControlDTO: SmartControlDTO): ResponseEntity<ApiResponse<SmartControlDTO>> {
-        requireNotNull(smartControlDTO.id) { "Id not found" }
-        return smartControlService.save(smartControlDTO).wrapOrNotFound()
+    @PutMapping("/smart-control/{id}")
+    fun updateSmartControl(
+        @RequestBody smartControlDTO: UpdateSmartControlDTO,
+        @PathVariable(required = true) id: Int
+    ): ResponseEntity<ApiResponse<SmartControlDTO>> {
+        requireNotNull(id) { "Id not found" }
+        return smartControlService.update(smartControlDTO.apply { this.id = id }).wrapOrNotFound()
     }
 
 

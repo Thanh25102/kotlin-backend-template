@@ -17,8 +17,9 @@ class SmartControlServiceImpl(
     private val restTemplate: RestTemplate
 ) : SmartControlService {
 
-    override fun save(smartControlDTO: SmartControlDTO): SmartControlDTO {
+    override fun save(smartControlDTO: CreateSmartControlDTO): SmartControlDTO {
         val smartControlEntity = smartControlDTO.toEntity()
+
         val smartControlSaved = smartControlRepo.save(smartControlEntity).toDTO()
 
         val xmlMapper = XmlMapper()
@@ -38,6 +39,12 @@ class SmartControlServiceImpl(
 
         val btnSaved = buttonRepo.saveAll(buttons.map { it.toEntity() }).map { it.toDto() }
         return smartControlSaved.copy(buttons = btnSaved)
+    }
+
+    override fun update(smartControlDTO: UpdateSmartControlDTO): SmartControlDTO {
+        val smartControlEntity = smartControlDTO.toEntity()
+        val smartControlSaved = smartControlRepo.save(smartControlEntity).toDTO()
+        return smartControlSaved
     }
 
     override fun findById(id: Int): SmartControlDTO {

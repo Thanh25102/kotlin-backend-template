@@ -17,8 +17,8 @@ class ButtonSchedule(private val asyncTask: AsyncTask, private val messagingTemp
 
     @Scheduled(fixedRate = 1000)
     fun updateButtonValue() {
-//        val buttons = asyncTask.asyncTask()
-//        messagingTemplate.convertAndSend("/topic/smart-control", buttons.join())
+        val buttons = asyncTask.asyncTask()
+        messagingTemplate.convertAndSend("/topic/smart-control", buttons.join())
     }
 
 }
