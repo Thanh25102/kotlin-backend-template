@@ -12,6 +12,3 @@ class InvalidPasswordException() : ErrorResponseException(
         .build(),
     null
 )
-/**
- * AIOT, MTC, (RPA, CHATBOT ONG QUOC, {* COMPUTERVISION[vms] *} )
- */

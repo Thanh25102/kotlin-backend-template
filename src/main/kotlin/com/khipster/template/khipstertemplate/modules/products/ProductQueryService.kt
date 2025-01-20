@@ -1,11 +1,13 @@
 package com.khipster.template.khipstertemplate.modules.products
 
+import com.khipster.template.khipstertemplate.utils.FilterURLQueryService
 import org.slf4j.LoggerFactory
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.domain.Specification
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import org.springframework.web.util.UriComponentsBuilder
 import tech.jhipster.service.QueryService
 
 @Service
@@ -30,6 +32,10 @@ class ProductQueryService(
             .map { it.toDto() }
     }
 
+    fun getByCriteria(criteria: ProductCriteria?): String? {
+        return buildQueryString(criteria)
+    }
+
     @Transactional(readOnly = true)
     fun countByCriteria(criteria: ProductCriteria?): Long {
         log.debug("count by criteria : {}", criteria)
@@ -42,7 +48,7 @@ class ProductQueryService(
      * @param criteria The object which holds all the filters, which the entities should match.
      * @return the matching [Specification] of the entity.
      */
-    private fun createSpecification(criteria: ProductCriteria?): Specification<Product?> {
+    fun createSpecification(criteria: ProductCriteria?): Specification<Product?> {
         var specification: Specification<Product?> = Specification.where(null)
 
         criteria?.let {
@@ -64,5 +70,18 @@ class ProductQueryService(
         }
 
         return specification
+    }
+
+    fun buildQueryString(criteria: ProductCriteria?): String {
+        val builder = UriComponentsBuilder.newInstance()
+        criteria?.let {
+            val (id, name, price, distinct) = it
+            id?.let { FilterURLQueryService.buildURLQueryFromFilters(builder, "id", id) }
+            name?.let { FilterURLQueryService.buildURLQueryFromFilters(builder, "name", name) }
+            price?.let { FilterURLQueryService.buildURLQueryFromFilters(builder, "price", price) }
+            distinct?.let { builder.queryParam("distinct", distinct) }
+        }
+
+        return builder.build().toUriString()
     }
 }

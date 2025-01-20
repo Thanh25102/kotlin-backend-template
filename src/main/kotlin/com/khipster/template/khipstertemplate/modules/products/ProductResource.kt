@@ -8,9 +8,7 @@ import com.khipster.template.khipstertemplate.errors.BadRequestAlertException
 import jakarta.validation.Valid
 import jakarta.validation.constraints.NotNull
 import org.springdoc.core.annotations.ParameterObject
-import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
-import org.springframework.data.web.PagedResourcesAssembler
 import org.springframework.hateoas.EntityModel
 import org.springframework.hateoas.PagedModel
 import org.springframework.http.ResponseEntity
@@ -103,6 +101,16 @@ class ProductResource(
             PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page)
 
         return page.content.wrapOrNotFound(headers = headers)
+    }
+
+    @GetMapping("/products/url")
+    fun getAllProductsUrl(
+        criteria: ProductCriteria,
+        @ParameterObject pageable: Pageable,
+    ): ResponseEntity<PagedModel<EntityModel<ProductDTO>>>? {
+        val url = productQueryService.getByCriteria(criteria)
+        println("URL: $url")
+        return null
     }
 
     @GetMapping("/products/count")
