@@ -1,6 +1,7 @@
 package com.khipster.template.khipstertemplate.modules.account
 
 import com.khipster.template.khipstertemplate.domain.User
+import com.khipster.template.khipstertemplate.domain.User_
 import com.khipster.template.khipstertemplate.repository.UserRepo
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
