@@ -1,9 +1,6 @@
 package com.khipster.template.khipstertemplate.modules.attendance.salary
 
-import jakarta.persistence.Column
-import jakarta.persistence.Entity
-import jakarta.persistence.Id
-import jakarta.persistence.Table
+import jakarta.persistence.*
 import jakarta.validation.constraints.NotNull
 import jakarta.validation.constraints.Size
 import org.hibernate.proxy.HibernateProxy
@@ -14,6 +11,7 @@ import java.time.Instant
 @Table(name = "face_group_salary")
 data class GroupSalary (
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     var id: Long? = null,
 
