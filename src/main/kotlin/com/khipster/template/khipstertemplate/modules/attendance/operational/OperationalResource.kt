@@ -69,5 +69,10 @@ class OperationalResource(
         )
     }
 
+    @GetMapping("/operational/count")
+    fun countOperational(operationalCriteria: OperationalCriteria): ResponseEntity<ApiResponse<Long>> {
+        return operationalQueryService.countByCriteria(operationalCriteria).wrapOrNotFound()
+    }
+
 
 }

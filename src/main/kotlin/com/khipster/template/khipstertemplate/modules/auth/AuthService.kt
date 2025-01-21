@@ -19,7 +19,6 @@ class AuthService(
 ) {
     fun register(userRegister: UserRegisterDTO): User {
         userRepo.findOneByLoginOrEmail(userRegister.login, userRegister.email)?.let {
-            // check non-active user
             throw UsernameAlreadyUsedException()
         }
 
