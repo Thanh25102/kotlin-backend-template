@@ -103,16 +103,6 @@ class ProductResource(
         return page.content.wrapOrNotFound(headers = headers)
     }
 
-    @GetMapping("/products/url")
-    fun getAllProductsUrl(
-        criteria: ProductCriteria,
-        @ParameterObject pageable: Pageable,
-    ): ResponseEntity<PagedModel<EntityModel<ProductDTO>>>? {
-        val url = productQueryService.getByCriteria(criteria)
-        println("URL: $url")
-        return null
-    }
-
     @GetMapping("/products/count")
     fun countProducts(criteria: ProductCriteria): ResponseEntity<ApiResponse<Long>> {
         return productQueryService.countByCriteria(criteria).wrapOrNotFound()
