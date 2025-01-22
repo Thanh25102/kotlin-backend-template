@@ -9,8 +9,6 @@ import java.util.*
 @Configuration
 class WebSocketClientConfig {
 
-    // get properties from application.yml
-
     @Value("\${third-party.luna-api.username}")
     private lateinit var username: String
 
