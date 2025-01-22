@@ -94,7 +94,6 @@ class WebConfigurer(
         }
         return CorsFilter(source)
     }
-
     /**
      * Initializes H2 console.
      */

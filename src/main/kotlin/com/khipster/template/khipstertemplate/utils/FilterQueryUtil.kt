@@ -1,77 +1,51 @@
 package com.khipster.template.khipstertemplate.utils
 
+import org.springframework.data.domain.Pageable
 import org.springframework.web.util.UriComponentsBuilder
 import tech.jhipster.service.filter.Filter
 import tech.jhipster.service.filter.RangeFilter
 import tech.jhipster.service.filter.StringFilter
 
-object FilterURLQueryService {
-    fun buildURLQueryFromFilters(builder: UriComponentsBuilder, fieldName: String, filters: Any?): String {
-        try {
-            when (filters) {
-                is StringFilter -> addStringFilterQueries(builder, fieldName, filters)
-                is RangeFilter<*> -> addRangeFilterQueries(builder, fieldName, filters)
-                is Filter<*> -> addFilterQueries(builder, fieldName, filters)
-            }
-        } catch (e: IllegalAccessException) {
-            e.printStackTrace()
-        }
-        return builder.toUriString()
-    }
+fun UriComponentsBuilder.addFilters(filters: Map<String, Any?>) {
+    filters.forEach { (fieldName, filter) -> addFilter(fieldName, filter) }
+}
 
-    fun <FIELD_TYPE : Comparable<FIELD_TYPE>, FILTER : RangeFilter<FIELD_TYPE>> addRangeFilterQueries(
-        builder: UriComponentsBuilder,
-        fieldName: String,
-        filter: FILTER
-    ) {
-        addFilterQuery(builder, fieldName, "greaterThan", filter.greaterThan)
-        addFilterQuery(builder, fieldName, "lessThan", filter.lessThan)
-        addFilterQuery(builder, fieldName, "greaterThanOrEqual", filter.greaterThanOrEqual)
-        addFilterQuery(builder, fieldName, "lessThanOrEqual", filter.lessThanOrEqual)
-        addFilterQuery(builder, fieldName, "equals", filter.equals)
-        addFilterQuery(builder, fieldName, "notEquals", filter.notEquals)
-        addFilterQuery(builder, fieldName, "specified", filter.specified)
-        addCollectionFilterQuery(builder, fieldName, "in", filter.getIn())
-        addCollectionFilterQuery(builder, fieldName, "notIn", filter.notIn)
+fun UriComponentsBuilder.addFilter(fieldName: String, filter: Any?) {
+    when (filter) {
+        is StringFilter -> this.addStringFilter(fieldName, filter)
+        is RangeFilter<*> -> this.addRangeFilter(fieldName, filter)
+        is Filter<*> -> this.addGenericFilter(fieldName, filter)
     }
+}
 
-    fun addStringFilterQueries(builder: UriComponentsBuilder, fieldName: String, filter: StringFilter) {
-        addFilterQuery(builder, fieldName, "equals", filter.equals)
-        addFilterQuery(builder, fieldName, "notEquals", filter.notEquals)
-        addFilterQuery(builder, fieldName, "specified", filter.specified)
-        addFilterQuery(builder, fieldName, "contains", filter.contains)
-        addFilterQuery(builder, fieldName, "doesNotContain", filter.doesNotContain)
-        addCollectionFilterQuery(builder, fieldName, "in", filter.getIn())
-        addCollectionFilterQuery(builder, fieldName, "notIn", filter.notIn)
-    }
+fun UriComponentsBuilder.addStringFilter(fieldName: String, filter: StringFilter) {
+    addGenericFilter(fieldName, filter)
+    addQueryParam("${fieldName}__like", filter.contains)
+    addQueryParam("${fieldName}__nlike", filter.doesNotContain)
+}
 
-    fun <FILTER : Filter<*>> addFilterQueries(
-        builder: UriComponentsBuilder,
-        fieldName: String,
-        filter: FILTER
-    ) {
-        addFilterQuery(builder, fieldName, "equals", filter.equals)
-        addFilterQuery(builder, fieldName, "notEquals", filter.notEquals)
-        addFilterQuery(builder, fieldName, "specified", filter.specified)
-        addCollectionFilterQuery(builder, fieldName, "in", filter.getIn())
-        addCollectionFilterQuery(builder, fieldName, "notIn", filter.notIn)
-    }
+fun <T : Comparable<T>> UriComponentsBuilder.addRangeFilter(fieldName: String, filter: RangeFilter<T>) {
+    addGenericFilter(fieldName, filter)
+    addQueryParam("${fieldName}__gt", filter.greaterThan)
+    addQueryParam("${fieldName}__lt", filter.lessThan)
+    addQueryParam("${fieldName}__gte", filter.greaterThanOrEqual)
+    addQueryParam("${fieldName}__lte", filter.lessThanOrEqual)
+}
 
-    fun <T> addFilterQuery(
-        builder: UriComponentsBuilder,
-        fieldName: String,
-        queryParamSuffix: String,
-        value: T?
-    ) {
-        value?.let { builder.queryParam("$fieldName.$queryParamSuffix", it) }
-    }
+fun <T> UriComponentsBuilder.addGenericFilter(fieldName: String, filter: Filter<T>) {
+    addQueryParam("${fieldName}__eq", filter.equals)
+    addQueryParam("${fieldName}__neq", filter.notEquals)
+    addQueryParam("${fieldName}__specified", filter.specified)
+    filter.getIn()?.forEach { addQueryParam("${fieldName}__in", it) }
+    filter.notIn?.forEach { addQueryParam("${fieldName}__nin", it) }
+}
 
-    fun <T> addCollectionFilterQuery(
-        builder: UriComponentsBuilder,
-        fieldName: String,
-        queryParamSuffix: String,
-        values: Collection<T>?
-    ) {
-        values?.forEach { builder.queryParam("$fieldName.$queryParamSuffix", it) }
-    }
+fun <T> UriComponentsBuilder.addQueryParam(paramName: String, value: T?) {
+    value?.let { this.queryParam(paramName, it) }
+}
+
+// add pageable to uri from pageable of spring
+fun UriComponentsBuilder.addPageable(pageable: Pageable?) {
+    this.addQueryParam("page", pageable?.pageNumber ?: 0)
+    this.addQueryParam("page_size", pageable?.pageSize ?: 10)
 }
