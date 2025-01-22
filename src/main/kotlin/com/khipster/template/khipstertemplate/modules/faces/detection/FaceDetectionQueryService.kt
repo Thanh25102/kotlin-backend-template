@@ -1,6 +1,5 @@
 package com.khipster.template.khipstertemplate.modules.faces.detection
 
-import com.khipster.template.khipstertemplate.module.detection.LunaGetEventsResponse
 import com.khipster.template.khipstertemplate.utils.addFilters
 import com.khipster.template.khipstertemplate.utils.addPageable
 import org.springframework.beans.factory.annotation.Qualifier
