@@ -1,5 +1,7 @@
 package com.khipster.template.khipstertemplate.config
 
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.khipster.template.khipstertemplate.modules.faces.LunaFaceDetectionEvent
 import org.springframework.stereotype.Component
 import org.springframework.web.socket.TextMessage
 import org.springframework.web.socket.WebSocketHttpHeaders
@@ -10,7 +12,9 @@ import java.net.URI
 import kotlin.concurrent.fixedRateTimer
 
 @Component
-class RawWebSocketClient {
+class RawWebSocketClient(
+    private val objectMapper : ObjectMapper
+) {
 
     private var session: WebSocketSession? = null
     private var reconnectTimer: java.util.Timer? = null
@@ -76,7 +80,8 @@ class RawWebSocketClient {
         }
 
         override fun handleTextMessage(session: WebSocketSession, message: TextMessage) {
-            println("Received message: ${message.payload}")
+            val lunaFaceDetectionEvent = objectMapper.readValue(message.payload, LunaFaceDetectionEvent::class.java)
+            println("Received message: $lunaFaceDetectionEvent")
         }
 
         override fun handleTransportError(session: WebSocketSession, exception: Throwable) {

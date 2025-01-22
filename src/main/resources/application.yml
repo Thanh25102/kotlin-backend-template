@@ -75,3 +75,9 @@ third-party:
     url: http://10.6.18.13
     username: admin
     password: admin
+
+  luna-api:
+    api: http://10.6.18.2:8080
+    ws: ws://10.6.18.2:8080/api/lp5/6/ws
+    username: vlabs@vlabs.vlabs
+    password: vlabs
