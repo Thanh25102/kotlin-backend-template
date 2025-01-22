@@ -18,12 +18,14 @@ class HolidayServiceImpl(
             endDate = createHolidayDTO.endDate,
             coefficient = createHolidayDTO.coefficient,
         )
+
         return holidayRepo.save(holiday).toDto()
     }
 
     override fun update(updateHolidayDTO: UpdateHolidayDTO): HolidayDTO {
         val holiday = holidayRepo.findByIdOrNull(updateHolidayDTO.id)
         requireNotNull(holiday) { "Entity not found" }
+
         return holidayRepo.save(holiday.apply {
             this.title = updateHolidayDTO.title
             this.description = updateHolidayDTO.description
