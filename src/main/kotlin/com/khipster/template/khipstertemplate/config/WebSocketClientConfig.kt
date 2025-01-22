@@ -1,22 +1,33 @@
 package com.khipster.template.khipstertemplate.config
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import java.util.Base64
+import java.util.*
 
 @Configuration
 class WebSocketClientConfig {
 
+    // get properties from application.yml
+
+    @Value("\${third-party.luna-api.username}")
+    private lateinit var username: String
+
+    @Value("\${third-party.luna-api.password}")
+    private lateinit var password: String
+
+    @Value("\${third-party.luna-api.ws}")
+    private lateinit var websocketUrl: String
+
+
     @Bean
     fun rawWebSocketClient(objectMapper: ObjectMapper): RawWebSocketClient {
         return RawWebSocketClient(objectMapper).apply {
-            val username = "vlabs@vlabs.vlabs"
-            val password = "vlabs"
             val auth = "$username:$password"
             val encodedAuth = Base64.getEncoder().encodeToString(auth.toByteArray())
             autoStart(
-                "ws://10.6.18.2:8080/api/lp5/6/ws",
+                websocketUrl,
                 mapOf("Authorization" to "Basic $encodedAuth")
             )
         }
