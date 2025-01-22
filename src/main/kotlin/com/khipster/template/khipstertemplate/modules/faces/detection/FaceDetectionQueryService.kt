@@ -18,7 +18,7 @@ class FaceDetectionQueryService(@Qualifier("visionLabsClient") private val restC
 
     fun fetchByCriteria(criteria: FaceDetectionCriteria?, pageable: Pageable): LunaGetEventsResponse? {
         val queryString = buildQueryString(criteria, pageable)
-        val result = restClient.get().uri(queryString).retrieve().body(LunaGetEventsResponse::class.java)
+        val result = restClient.get().uri("/lp5/6/events$queryString").retrieve().body(LunaGetEventsResponse::class.java)
         return result
     }
 
