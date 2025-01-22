@@ -26,6 +26,7 @@ data class FaceDetectionCriteria(
     var districts: StringFilter? = null,
     var gender: BooleanFilter? = null,
 ) : Serializable, Criteria {
+
     constructor(other: FaceDetectionCriteria):this(
         other.createTime?.copy(),
         other.insertTime?.copy(),

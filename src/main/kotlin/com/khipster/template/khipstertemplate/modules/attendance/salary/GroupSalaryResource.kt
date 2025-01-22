@@ -19,7 +19,7 @@ class GroupSalaryResource(
     private var applicationName: String? = "test app name"
 
     @PostMapping("/group-salaries")
-    fun create(@RequestBody groupSalaryDTO: CreateGroupSalaryDTO): ResponseEntity<ApiResponse<GroupSalaryDTO>> {
+    fun createSalary(@RequestBody groupSalaryDTO: CreateGroupSalaryDTO): ResponseEntity<ApiResponse<GroupSalaryDTO>> {
         val result = groupSalaryService.create(groupSalaryDTO)
         return result.wrapOrNotFound(
             headers = HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.id.toString())
@@ -27,7 +27,7 @@ class GroupSalaryResource(
     }
 
     @PutMapping("/group-salaries/{id}")
-    fun update(
+    fun updateSalary(
         @RequestBody groupSalaryDTO: UpdateGroupSalaryDTO, @PathVariable("id") id: Long
     ): ResponseEntity<ApiResponse<GroupSalaryDTO>> {
 

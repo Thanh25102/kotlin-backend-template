@@ -2,7 +2,6 @@ package com.khipster.template.khipstertemplate.modules.faces.detection
 
 import com.khipster.template.khipstertemplate.config.wrapOrNotFound
 import com.khipster.template.khipstertemplate.domain.ApiResponse
-import com.khipster.template.khipstertemplate.module.detection.LunaEventResponse
 import org.springdoc.core.annotations.ParameterObject
 import org.springframework.data.domain.Pageable
 import org.springframework.http.ResponseEntity
@@ -17,7 +16,7 @@ class FaceDetectionResource(
 ) {
 
     @GetMapping("/face-detection")
-    fun search(
+    fun getAllFaceDetections(
         criteria: FaceDetectionCriteria,
         @ParameterObject pageable: Pageable
     ): ResponseEntity<ApiResponse<List<LunaEventResponse>>> {

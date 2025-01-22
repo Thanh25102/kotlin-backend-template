@@ -58,7 +58,7 @@ class BranchResource(
 
 
     @GetMapping("/branches")
-    fun searchBranch(
+    fun getAllBranches(
         criteria: BranchCriteria,
         @ParameterObject pageable: Pageable, ): ResponseEntity<ApiResponse<List<BranchDto>>> {
         val page = branchQueryService.findByCriteria(criteria, pageable)
@@ -69,7 +69,7 @@ class BranchResource(
     }
 
     @GetMapping("/branches/count")
-    fun countBranch(criteria: BranchCriteria): ResponseEntity<ApiResponse<Long>> {
+    fun countBranches(criteria: BranchCriteria): ResponseEntity<ApiResponse<Long>> {
         return branchQueryService.countByCriteria(criteria).wrapOrNotFound()
     }
 }
