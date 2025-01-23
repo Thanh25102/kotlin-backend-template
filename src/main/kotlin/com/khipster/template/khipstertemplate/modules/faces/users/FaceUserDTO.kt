@@ -30,15 +30,14 @@ data class LunaFacesUpdateRequest(
 
 data class LunaFacesResponse(
     @JsonAlias("faces") val faces: List<LunaFaceResponse>? = emptyList(),
-) {
-    data class LunaFaceResponse(
-        @JsonAlias("face_id") val faceId: String? = null,
-        @JsonAlias("account_id") val accountId: String? = null,
-        @JsonAlias("event_id") val eventId: String? = null,
-        @JsonAlias("user_data") val userData: String? = null,
-        @JsonAlias("create_time") val createTime: String? = null,
-        @JsonAlias("external_id") val externalId: String? = null,
-        @JsonAlias("avatar") val avatar: String? = null,
-        @JsonAlias("lists") val lists: List<String>? = emptyList()
-    )
-}
+)
+data class LunaFaceResponse(
+    @JsonAlias("face_id") val faceId: String? = null,
+    @JsonAlias("account_id") val accountId: String? = null,
+    @JsonAlias("event_id") val eventId: String? = null,
+    @JsonAlias("user_data") val userData: String? = null,
+    @JsonAlias("create_time") val createTime: String? = null,
+    @JsonAlias("external_id") val externalId: String? = null,
+    @JsonAlias("avatar") val avatar: String? = null,
+    @JsonAlias("lists") val lists: List<String>? = emptyList()
+)
