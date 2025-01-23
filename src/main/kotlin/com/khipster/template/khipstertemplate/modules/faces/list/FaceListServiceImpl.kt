@@ -9,7 +9,11 @@ class FaceListServiceImpl(
     @Qualifier("visionLabsClient") private val restClient: RestClient
 ) : FaceListService {
     override fun create(face: LunaListCreateRequest): LunaListCreateResponse? {
-        return restClient.post().uri("/lp5/6/lists").body(face).retrieve().body(LunaListCreateResponse::class.java)
+
+        return restClient.post().uri("/lp5/6/lists")
+            .body(face)
+            .retrieve()
+            .body(LunaListCreateResponse::class.java)
     }
 
     override fun update(face: LunaListUpdateRequest) {

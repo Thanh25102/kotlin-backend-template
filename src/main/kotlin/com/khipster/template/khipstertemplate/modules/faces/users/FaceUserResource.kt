@@ -4,12 +4,10 @@ import com.khipster.template.khipstertemplate.config.wrapOrNotFound
 import com.khipster.template.khipstertemplate.domain.ApiResponse
 import org.springdoc.core.annotations.ParameterObject
 import org.springframework.data.domain.Pageable
+import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PatchMapping
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
+import org.springframework.web.multipart.MultipartFile
 
 @RestController
 @RequestMapping("/api")
@@ -31,7 +29,13 @@ class FaceUserResource(
 
     @GetMapping("/face-user/count")
     fun getFaceUserCount(criteria: FaceUserCriteria): ResponseEntity<ApiResponse<Int>>? {
-        return faceUserQueryService.fetchCountByCriteria(criteria)?.wrapOrNotFound(message = "Face user count not found")
+        return faceUserQueryService.fetchCountByCriteria(criteria)
+            ?.wrapOrNotFound(message = "Face user count not found")
+    }
+
+    @PostMapping("/face-user/detect", consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
+    fun detectFace(@RequestParam("image") image: MultipartFile): ResponseEntity<ApiResponse<LunaFaceResponse>>? {
+        return faceUserService.detectFace(image)?.wrapOrNotFound(message = "Face not detected")
     }
 
     @PostMapping("/face-user")
