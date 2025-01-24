@@ -9,7 +9,9 @@ data class HolidayDTO(
     var id: Long? = null,
     var title: String? = null,
     var description: String? = null,
+    @Schema(type = "string", format = "date", example = "2023-12-31")
     var startDate: Instant? = null,
+    @Schema(type = "string", format = "date", example = "2023-12-31")
     var endDate: Instant? = null,
     var coefficient: Float? = null,
 )
