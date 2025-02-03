@@ -7,11 +7,13 @@ import java.time.Instant
 
 data class HolidayDTO(
     var id: Long? = null,
-    var title: String? = null, // chua co validate title not null
+    var title: String? = null,
     var description: String? = null,
-    var startDate: Instant? = null, // chua co validate start < end
-    var endDate: Instant? = null, // chua co validate end > start
-    var coefficient: Float? = null, // chua co validate coefficient > 0
+    @Schema(type = "string", format = "date", example = "2023-12-31")
+    var startDate: Instant? = null,
+    @Schema(type = "string", format = "date", example = "2023-12-31")
+    var endDate: Instant? = null,
+    var coefficient: Float? = null,
 )
 
 data class CreateHolidayDTO(

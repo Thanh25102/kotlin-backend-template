@@ -9,6 +9,7 @@ import jakarta.persistence.Table
 import jakarta.validation.constraints.NotNull
 import jakarta.validation.constraints.Size
 import org.hibernate.proxy.HibernateProxy
+import org.springframework.aot.generate.Generated
 import java.time.Instant
 
 @Entity
