@@ -34,12 +34,12 @@ class FaceUserResource(
     }
 
     @PostMapping("/face-user/detect", consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
-    fun detectFace(@RequestParam("image") image: MultipartFile): ResponseEntity<ApiResponse<LunaFaceResponse>>? {
+    fun detectFace(@RequestParam("image") image: MultipartFile): ResponseEntity<ApiResponse<DetectionResponse>>? {
         return faceUserService.detectFace(image)?.wrapOrNotFound(message = "Face not detected")
     }
 
     @PostMapping("/face-user")
-    fun createFaceUser(face: LunaFacesCreateRequest): ResponseEntity<ApiResponse<LunaFaceCreateResponse>>? {
+    fun createFaceUser(@RequestBody face: FaceCreateRequest): ResponseEntity<ApiResponse<FaceCreateResponse>>? {
         return faceUserService.createFace(face)?.wrapOrNotFound(message = "Face user not created")
     }
 

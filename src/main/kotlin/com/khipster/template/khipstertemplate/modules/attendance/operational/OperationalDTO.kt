@@ -10,8 +10,8 @@ data class CreateOperationalDTO(
     @Schema(type = "string", format = "time", example = "2023-12-31")
     var endTime: Instant? = null,
     var dayOfWeek: String? = null,
-    var coefficient: Float? = null,
-    var coefficientOt: Float? = null,
+    var coefficient: Float? = null,// chua co validate coefficient > 0
+    var coefficientOt: Float? = null, //chua co validate coefficientOt > 0
     var isOvernight: Boolean? = false,
     @Schema(type = "string", format = "time", example = "2023-12-31")
     var startBreakTime: Instant? = null,
@@ -27,8 +27,8 @@ data class UpdateOperationalDTO(
     @Schema(type = "string", format = "time", example = "2023-12-31")
     var endTime: Instant? = null,
     var dayOfWeek: String? = null,
-    var coefficient: Float? = null,
-    var coefficientOt: Float? = null,
+    var coefficient: Float? = null, // chua co validate coefficient > 0
+    var coefficientOt: Float? = null,  // chua co validate coefficientOt > 0
     var isOvernight: Boolean? = false,
     @Schema(type = "string", format = "time", example = "2023-12-31")
     var startBreakTime: Instant? = null,
@@ -45,8 +45,8 @@ data class OperationalDTO(
     @Schema(type = "string", format = "time", example = "2023-12-31")
     var endTime: Instant? = null,
     var dayOfWeek: String? = null,
-    var coefficient: Float? = null,
-    var coefficientOt: Float? = null,
+    var coefficient: Float? = null, // chua co validate coefficient > 0
+    var coefficientOt: Float? = null, // chua co validate coefficientOt > 0
     var isOvernight: Boolean? = false,
     @Schema(type = "string", format = "time", example = "2023-12-31")
     var startBreakTime: Instant? = null,

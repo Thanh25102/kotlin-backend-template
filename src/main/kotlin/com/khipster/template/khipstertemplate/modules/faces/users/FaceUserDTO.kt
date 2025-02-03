@@ -5,6 +5,21 @@ import com.khipster.template.khipstertemplate.modules.faces.ErrorResponse
 import com.khipster.template.khipstertemplate.modules.faces.Rect
 import com.khipster.template.khipstertemplate.modules.faces.Samples
 
+data class FaceCreateRequest(
+    val information: String? = null,
+    val externalId: String? = null,
+    val lists: List<String>? = emptyList(),
+
+    val sdkDescriptor: String? = null,// data
+    val sampleIds: List<String>? = emptyList()//sample id
+)
+
+data class FaceCreateResponse(
+    val matcherFaces: List<LunaMatcherFaceResponse>? = emptyList(),
+    val extractors: List<LunaExtractorResponse>? = emptyList(),
+    val faceCreateResponse: LunaFaceCreateResponse? = null
+)
+
 data class LunaFacesCreateRequest(
     @JsonAlias("external_id") val externalId: String? = "",
     @JsonAlias("user_data") val userData: String? = "",
@@ -17,6 +32,7 @@ data class LunaFacesCreateRequest(
         @JsonAlias("attribute_id") val attributeId: String? = "",
     )
 }
+
 
 data class LunaFaceCreateResponse(
     @JsonAlias("face_id") val faceId: String? = null,
@@ -46,6 +62,11 @@ data class LunaFaceResponse(
     @JsonAlias("lists") val lists: List<String>? = emptyList()
 )
 
+data class DetectionResponse(
+    val detector: LunaImagesResponse? = null,
+    val sdkEstimateDescriptor: LunaImagesEstimationsResponse? = null
+)
+
 data class LunaImagesResponse(
     @JsonAlias("images")
     val images: List<LunaImageResponse>? = emptyList()
@@ -61,11 +82,11 @@ data class LunaImagesResponse(
         val error: ErrorResponse? = null,
 
         @JsonAlias("description")
-        val description: LunaDescriptionResponse? = null
+        val detections: LunaDetectionResponse? = null
     ) {
-        data class LunaDescriptionResponse(
+        data class LunaDetectionResponse(
             @JsonAlias("samples")
-            val samples: Samples? = null
+            val samples: List<Samples>? = emptyList()
         )
     }
 }
@@ -87,7 +108,7 @@ data class LunaImagesEstimationsResponse(
     ) {
         data class LunaImageFacesResponse(
             @JsonAlias("face")
-            val face: List<LunaFaceImageResponse>? = emptyList(),
+            val face: LunaFaceImageResponse? = null,
 
             @JsonAlias("body")
             val body: Any? = null
@@ -97,8 +118,8 @@ data class LunaImagesEstimationsResponse(
                 val detection: LunaDetectionResponse? = null
             ) {
                 data class LunaDetectionResponse(
-                    @JsonAlias("detection")
-                    val detection: Rect? = null,
+                    @JsonAlias("rect")
+                    val rect: Rect? = null,
 
                     @JsonAlias("warp")
                     val warp: String? = null,
@@ -125,10 +146,9 @@ data class LunaImagesEstimationsResponse(
 }
 
 data class LunaMatcherFaceRequest(
-    @JsonAlias("references")
     val references: List<Reference>? = emptyList(),
     @JsonAlias("candidates")
-    val candidates: List<Candidate>? = emptyList()
+    val candidates: List<Candidate> = emptyList(),
 ) {
     data class Reference(
         @JsonAlias("data")
@@ -145,7 +165,7 @@ data class LunaMatcherFaceRequest(
         @JsonAlias("limit")
         val limit: Int? = null,
         @JsonAlias("threshold")
-        val threshold: Double? = null
+        val threshold: Float? = null
     ) {
         data class Filters(
             @JsonAlias("origin")
@@ -170,6 +190,7 @@ data class LunaMatcherFaceResponse(
         @JsonAlias("type")
         val type: String? = null
     )
+
     data class Match(
         @JsonAlias("result")
         val result: List<Result>? = emptyList(),
@@ -254,6 +275,4 @@ data class LunaExtractorResponse(
         }
     }
 }
-
-
 
