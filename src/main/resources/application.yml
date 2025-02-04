@@ -9,6 +9,8 @@ spring:
   jpa:
     hibernate:
       ddl-auto: validate
+      # show jpa query
+    show-sql: true
   docker:
     compose:
       enabled: false

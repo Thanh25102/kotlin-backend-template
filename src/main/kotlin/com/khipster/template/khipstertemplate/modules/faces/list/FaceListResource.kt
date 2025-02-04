@@ -16,16 +16,17 @@ class FaceListResource(
 
     @PostMapping("/face-lists")
     fun createFaceList(
-        @RequestBody face: LunaListCreateRequest
+        @RequestBody face: FaceListCreate
     ): ResponseEntity<ApiResponse<LunaListCreateResponse>>? {
         return faceListService.create(face)?.wrapOrNotFound(message = "Face list not created")
     }
 
-    @PutMapping("/face-lists")
+    @PatchMapping("/face-lists/{listId}")
     fun updateFaceList(
+        @PathVariable listId: String,
         @RequestBody face: LunaListUpdateRequest
     ): ResponseEntity<Void> {
-        faceListService.update(face)
+        faceListService.update(listId, face)
         return ResponseEntity.ok().build()
     }
 
@@ -38,6 +39,18 @@ class FaceListResource(
             criteria,
             pageable
         )?.lists?.wrapOrNotFound(message = "Face list not found")
+    }
+
+    @GetMapping("/face-lists/not-in-branch/{branchId}")
+    fun getFaceListsNotExistInBranchId(
+        @PathVariable branchId: Long
+    ): ResponseEntity<ApiResponse<List<LunaListResponse>>>? {
+        return faceListQueryService.fetchFaceListsNotExistInBranchId(branchId)?.wrapOrNotFound(message = "Face list not found")
+    }
+
+    @GetMapping("/face-lists/count")
+    fun countFaceLists(criteria: FaceListCriteria): ResponseEntity<ApiResponse<Int>>? {
+        return faceListQueryService.countByCriteria(criteria)?.wrapOrNotFound(message = "Face count list not found")
     }
 
 }

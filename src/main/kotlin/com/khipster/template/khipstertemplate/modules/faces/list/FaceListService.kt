@@ -2,8 +2,8 @@ package com.khipster.template.khipstertemplate.modules.faces.list
 
 interface FaceListService {
 
-    fun create(face: LunaListCreateRequest): LunaListCreateResponse?
+    fun create(face: FaceListCreate): LunaListCreateResponse?
 
-    fun update(face: LunaListUpdateRequest)
+    fun update(id: String, face: LunaListUpdateRequest)
 
 }

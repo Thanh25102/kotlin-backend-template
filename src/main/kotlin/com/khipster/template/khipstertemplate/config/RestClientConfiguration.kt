@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.PropertyNamingStrategies
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.boot.web.client.RestTemplateBuilder
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter
@@ -58,6 +59,24 @@ class RestClientConfiguration {
             .messageConverters {
                 it.add(MappingJackson2HttpMessageConverter(objectMapper))
             }
+            .build()
+    }
+
+    @Bean
+    @Qualifier("visionLabsTemplate")
+    fun visionLabsTemplate(): RestTemplate {
+        val auth = "$username:$password"
+        val encodedAuth = Base64.getEncoder().encodeToString(auth.toByteArray())
+
+        val objectMapper = ObjectMapper().apply {
+            propertyNamingStrategy = PropertyNamingStrategies.SNAKE_CASE
+            setSerializationInclusion(JsonInclude.Include.NON_NULL)
+        }
+
+        return RestTemplateBuilder()
+            .rootUri("$visionLabsUrl/api")
+            .defaultHeader("Authorization", "Basic $encodedAuth")
+            .additionalMessageConverters(MappingJackson2HttpMessageConverter(objectMapper))
             .build()
     }
 

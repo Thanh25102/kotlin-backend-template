@@ -1,6 +1,12 @@
 package com.khipster.template.khipstertemplate.modules.faces.list
 
 import com.fasterxml.jackson.annotation.JsonAlias
+import com.fasterxml.jackson.annotation.JsonIgnore
+
+data class FaceListCreate(
+    val branchId: Long? = null,
+    val userData: String? = null,
+)
 
 data class LunaListCreateRequest(
     @JsonAlias("user_data") val userData: String? = "",
@@ -13,11 +19,12 @@ data class LunaListCreateResponse(
 )
 
 data class LunaListUpdateRequest(
+    @JsonAlias("list_id") var listId: String? = "",
     @JsonAlias("user_data") val userData: String? = "",
 )
 
 data class LunaListsCountResponse(
-    @JsonAlias("lists_count") val listsCount: Int = 0,
+    @JsonAlias("lists_count") val listsCount: Long = 0,
 )
 
 data class LunaListsDelRequest(
