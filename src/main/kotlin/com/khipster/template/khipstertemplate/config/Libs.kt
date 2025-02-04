@@ -16,6 +16,10 @@ import tech.jhipster.web.util.PaginationUtil
 import java.util.*
 
 import com.fasterxml.jackson.module.kotlin.readValue
+import java.time.Instant
+import java.time.LocalDateTime
+import java.time.LocalTime
+import java.time.ZoneId
 
 /**
  * Wrap the nullable value into a ResponseEntity with an OK status.
@@ -72,4 +76,35 @@ inline fun <reified T> T.toJson(): String {
 inline fun <reified T> String.fromJson(): T {
     val mapper = jacksonObjectMapper()
     return mapper.readValue(this)
+}
+
+fun Instant.toLocalTime(): LocalTime {
+    return LocalDateTime.ofInstant(this, ZoneId.systemDefault()).toLocalTime()
+}
+
+fun Instant.toLocalDateTime(): LocalDateTime {
+    return LocalDateTime.ofInstant(this, ZoneId.systemDefault())
+}
+
+fun LocalTime.toInstant(): Instant {
+    return this.atDate(Instant.now().atZone(ZoneId.systemDefault()).toLocalDate()).atZone(ZoneId.systemDefault()).toInstant()
+}
+
+fun LocalDateTime.toInstant(): Instant {
+    return this.atZone(ZoneId.systemDefault()).toInstant()
+}
+
+// convert object to json snake case
+fun Any.toJsonSnakeCase(): String {
+    val mapper = jacksonObjectMapper()
+    mapper.propertyNamingStrategy = com.fasterxml.jackson.databind.PropertyNamingStrategies.SNAKE_CASE
+    return mapper.writeValueAsString(this)
+}
+
+// convert object to json camel case
+
+fun Any.toJsonCamelCase(): String {
+    val mapper = jacksonObjectMapper()
+    mapper.propertyNamingStrategy = com.fasterxml.jackson.databind.PropertyNamingStrategies.LOWER_CAMEL_CASE
+    return mapper.writeValueAsString(this)
 }

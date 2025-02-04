@@ -38,30 +38,39 @@ class FaceUserServiceImpl(
     override fun createFace(face: FaceCreateRequest): FaceCreateResponse? {
         val lunaFaceCreateRq = face.toLunaMatterRequest()
 
+        val customMapper = ObjectMapper()
+            .setSerializationInclusion(JsonInclude.Include.NON_NULL)
+            .setPropertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE)
+
         val matcherFace = restClient.post().uri("/lp5/6/matcher/faces")
+            .contentType(MediaType.APPLICATION_JSON)
             .body(lunaFaceCreateRq)
             .retrieve()
             .body(Array<LunaMatcherFaceResponse>::class.java)
             ?.toList()
 
         val extractor = restClient.post().uri("/lp5/6/extractor?extract_basic_attributes=1")
+            .contentType(MediaType.APPLICATION_JSON)
             .body(face.sampleIds ?: emptyList<String>())
             .retrieve()
             .body(Array<LunaExtractorResponse>::class.java)
             ?.toList()
 
+        val faceCreateRequest = LunaFacesCreateRequest(
+            externalId = face.externalId,
+            userData = face.information,
+            lists = face.lists,
+            attribute = LunaFacesCreateRequest.LunaFacesCreateAttributeRequest(
+                attributeId = extractor?.firstOrNull()?.attributeId
+            ),
+            avatar = extractor?.firstOrNull()?.url
+        )
+
+        val jsonFaceCreateRq = customMapper.writeValueAsString(faceCreateRequest)
+
         val createFace = restClient.post().uri("/lp5/6/faces")
-            .body(
-                LunaFacesCreateRequest(
-                    externalId = face.externalId,
-                    userData = face.information,
-                    lists = face.lists,
-                    attribute = LunaFacesCreateRequest.LunaFacesCreateAttributeRequest(
-                        attributeId = extractor?.firstOrNull()?.attributeId
-                    ),
-                    avatar = extractor?.firstOrNull()?.url
-                )
-            )
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(jsonFaceCreateRq)
             .retrieve()
             .body(LunaFaceCreateResponse::class.java)
 

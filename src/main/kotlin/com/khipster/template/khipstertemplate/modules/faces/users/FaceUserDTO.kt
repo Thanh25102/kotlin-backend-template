@@ -1,6 +1,8 @@
 package com.khipster.template.khipstertemplate.modules.faces.users
 
 import com.fasterxml.jackson.annotation.JsonAlias
+import com.fasterxml.jackson.annotation.JsonInclude
+import com.fasterxml.jackson.annotation.JsonInclude.Include
 import com.khipster.template.khipstertemplate.modules.faces.ErrorResponse
 import com.khipster.template.khipstertemplate.modules.faces.Rect
 import com.khipster.template.khipstertemplate.modules.faces.Samples
@@ -20,6 +22,7 @@ data class FaceCreateResponse(
     val faceCreateResponse: LunaFaceCreateResponse? = null
 )
 
+@JsonInclude(Include.NON_NULL)
 data class LunaFacesCreateRequest(
     @JsonAlias("external_id") val externalId: String? = "",
     @JsonAlias("user_data") val userData: String? = "",
@@ -28,6 +31,7 @@ data class LunaFacesCreateRequest(
     @JsonAlias("event_id") val eventId: String? = null,
     @JsonAlias("attribute") val attribute: LunaFacesCreateAttributeRequest?
 ) {
+    @JsonInclude(Include.NON_NULL)
     data class LunaFacesCreateAttributeRequest(
         @JsonAlias("attribute_id") val attributeId: String? = "",
     )
@@ -145,11 +149,13 @@ data class LunaImagesEstimationsResponse(
     }
 }
 
+@JsonInclude(Include.NON_NULL)
 data class LunaMatcherFaceRequest(
     val references: List<Reference>? = emptyList(),
     @JsonAlias("candidates")
     val candidates: List<Candidate> = emptyList(),
 ) {
+    @JsonInclude(Include.NON_NULL)
     data class Reference(
         @JsonAlias("data")
         val data: String? = null,
@@ -159,6 +165,7 @@ data class LunaMatcherFaceRequest(
         val id: String? = null
     )
 
+    @JsonInclude(Include.NON_NULL)
     data class Candidate(
         @JsonAlias("filters")
         val filters: Filters? = null,
@@ -167,11 +174,12 @@ data class LunaMatcherFaceRequest(
         @JsonAlias("threshold")
         val threshold: Float? = null
     ) {
+        @JsonInclude(Include.NON_NULL)
         data class Filters(
             @JsonAlias("origin")
             val origin: String? = null,
             @JsonAlias("external_ids")
-            val externalIds: List<String>? = emptyList(),
+            val externalIds: List<String>? = null,
             @JsonAlias("list_id")
             val listId: String? = null
         )

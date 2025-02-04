@@ -18,13 +18,15 @@ class StreamQueryService(
 
     fun fetchByCriteria(criteria: StreamCriteria?, pageable: Pageable): LunaStreamsGetResponse? {
         val queryString = buildQueryString(criteria, pageable)
-        val result = restClient.get().uri("/lp5/6/luna-streams/1/strems$queryString").retrieve().body(LunaStreamsGetResponse::class.java)
+        val result = restClient.get().uri("/lp5/6/luna-streams/1/strems$queryString").retrieve()
+            .body(LunaStreamsGetResponse::class.java)
         return result
     }
 
     fun countByCriteria(criteria: StreamCriteria?): Int? {
         val queryString = buildQueryString(criteria)
-        val result = restClient.get().uri("/lp5/6/luna-streams/1/strems/count$queryString").retrieve().body(Int::class.java)
+        val result =
+            restClient.get().uri("/lp5/6/luna-streams/1/strems/count$queryString").retrieve().body(Int::class.java)
         return result
     }
 

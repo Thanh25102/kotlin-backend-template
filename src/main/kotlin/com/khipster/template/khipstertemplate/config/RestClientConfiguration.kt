@@ -1,5 +1,6 @@
 package com.khipster.template.khipstertemplate.config
 
+import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.PropertyNamingStrategies
 import org.springframework.beans.factory.annotation.Qualifier
@@ -48,7 +49,9 @@ class RestClientConfiguration {
 
         val objectMapper = ObjectMapper().apply {
             propertyNamingStrategy = PropertyNamingStrategies.SNAKE_CASE
+            setSerializationInclusion(JsonInclude.Include.NON_NULL)
         }
+
         return RestClient.builder()
             .baseUrl("$visionLabsUrl/api")
             .defaultHeaders { it.setBasicAuth(encodedAuth) }
