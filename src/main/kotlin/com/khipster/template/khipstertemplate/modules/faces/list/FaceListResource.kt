@@ -48,6 +48,15 @@ class FaceListResource(
         return faceListQueryService.fetchFaceListsNotExistInBranchId(branchId)?.wrapOrNotFound(message = "Face list not found")
     }
 
+    @PostMapping("/face-lists/{listId}/add-to-branch/{branchId}")
+    fun addFaceListToBranch(
+        @PathVariable listId: String,
+        @PathVariable branchId: Long
+    ): ResponseEntity<Void> {
+        faceListService.addFaceListToBranch(listId, branchId)
+        return ResponseEntity.ok().build()
+    }
+
     @GetMapping("/face-lists/count")
     fun countFaceLists(criteria: FaceListCriteria): ResponseEntity<ApiResponse<Int>>? {
         return faceListQueryService.countByCriteria(criteria)?.wrapOrNotFound(message = "Face count list not found")

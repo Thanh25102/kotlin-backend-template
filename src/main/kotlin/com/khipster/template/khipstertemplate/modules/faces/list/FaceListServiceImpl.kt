@@ -42,4 +42,10 @@ class FaceListServiceImpl(
         val requestEntity = HttpEntity(LunaListCreateRequest(userData = face.userData), headers)
         restTemplate.patchForObject("/lp5/6/lists/${id}", requestEntity, Void::class.java)
     }
+
+    override fun addFaceListToBranch(listId: String, branchId: Long) {
+        branchRepo.findByIdOrNull(branchId)?.let {
+            faceListBranchRepo.save(FaceListBranch(branch = it, listId = listId))
+        }
+    }
 }

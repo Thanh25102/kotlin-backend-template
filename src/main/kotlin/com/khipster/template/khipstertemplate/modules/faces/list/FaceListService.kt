@@ -6,4 +6,6 @@ interface FaceListService {
 
     fun update(id: String, face: LunaListUpdateRequest)
 
+    fun addFaceListToBranch(listId: String, branchId: Long)
+
 }
