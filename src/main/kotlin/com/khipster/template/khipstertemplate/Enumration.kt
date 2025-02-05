@@ -9,3 +9,6 @@ enum class Gender {
 enum class Mask {
     MASK, NO_MASK, ALL
 }
+enum class TimeSheetType{
+    IN, OUT
+}
